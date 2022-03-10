@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/it_auth"
+        android:title="@string/auth"
+        android:icon="@drawable/ic_auth"/>
+    <item
+        android:id="@+id/it_reg"
+        android:title="@string/reg"
+        android:icon="@drawable/ic_reg"/>
+    <item
+        android:id="@+id/it_category"
+        android:title="@string/category"
+        android:icon="@drawable/ic_category"/>
+</menu>
