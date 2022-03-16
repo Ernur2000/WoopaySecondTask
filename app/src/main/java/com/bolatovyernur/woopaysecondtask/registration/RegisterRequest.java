@@ -5,12 +5,6 @@ public class RegisterRequest {
     private String login;
     private String password;
 
-    public RegisterRequest(int phoneNum, String login, String password) {
-        this.phoneNum = phoneNum;
-        this.login = login;
-        this.password = password;
-    }
-
     public int getPhoneNum() {
         return phoneNum;
     }
