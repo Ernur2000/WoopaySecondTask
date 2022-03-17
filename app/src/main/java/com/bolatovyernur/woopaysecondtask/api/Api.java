@@ -1,6 +1,7 @@
 package com.bolatovyernur.woopaysecondtask.api;
 
 import com.bolatovyernur.woopaysecondtask.util.Constants;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -16,12 +17,12 @@ public class Api {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
         mRetrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Constants.base_URL)
+                .baseUrl(Constants.BASE_URL)
                 .client(okHttpClient)
                 .build();
     }
 
-    public static Api getInstance() {
+    public static synchronized Api getInstance() {
         if (mInstance == null) {
             mInstance = new Api();
         }
