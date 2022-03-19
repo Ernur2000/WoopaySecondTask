@@ -11,4 +11,18 @@
     <string name="please_enter_phone_number">Please enter phone number</string>
     <string name="please_enter_login">Please enter login</string>
     <string name="password">Password</string>
+    <string name="woopay_wallet">Woopay Wallet</string>
+    <string name="phoneNum">Ваш номер телефона</string>
+    <string name="email">E-mail</string>
+    <string name="termOfUse">Принимаю пользовательское соглашение Wooppay</string>
+    <string name="next">Продолжить</string>
+    <string name="enter_sms_code">Введите код из СМС</string>
+    <string name="new_code">Новый код будет доступен 0:49</string>
+    <string name="pickPass">Придумайте пароль</string>
+    <string name="repeatPass">Придумайте пароль</string>
+    <string name="contain">Пароль должен содержать:</string>
+    <string name="createWallet">Создать кошелёк</string>
+    <string name="eight_symbol">Не менее 8 символов</string>
+    <string name="numbers">Цифры</string>
+    <string name="capital_letter">Заглавные и строчные буквы латиницей</string>
 </resources>
