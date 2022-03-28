@@ -1,31 +1,19 @@
 package com.bolatovyernur.woopaysecondtask.registration;
 
 public class RegisterRequest {
-    private int phoneNum;
     private String login;
-    private String password;
-
-    public int getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhoneNum(int phoneNum) {
-        this.phoneNum = phoneNum;
-    }
-
+    private String email;
     public String getLogin() {
         return login;
     }
-
     public void setLogin(String login) {
         this.login = login;
     }
-
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

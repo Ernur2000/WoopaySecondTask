@@ -34,7 +34,7 @@
         android:fontFamily="@font/inter_semibold"
         android:textColor="@color/black"/>
     <EditText
-        android:id="@+id/ed_phoneNum"
+        android:id="@+id/ed_smsCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_woopayWallet"
@@ -52,12 +52,12 @@
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/ed_phoneNum"
+        app:layout_constraintTop_toBottomOf="@id/ed_smsCode"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="60dp"
         android:text="@string/next"
         android:textSize="16sp"
-        android:enabled="true"
+        android:enabled="false"
         android:textAllCaps="false"
         android:fontFamily="@font/inter_regular"
         android:background="@drawable/background_button"/>

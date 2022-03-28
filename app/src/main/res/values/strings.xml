@@ -17,7 +17,7 @@
     <string name="termOfUse">Принимаю пользовательское соглашение Wooppay</string>
     <string name="next">Продолжить</string>
     <string name="enter_sms_code">Введите код из СМС</string>
-    <string name="new_code">Новый код будет доступен 0:49</string>
+    <string name="new_code">Новый код будет доступен 0:</string>
     <string name="pickPass">Придумайте пароль</string>
     <string name="repeatPass">Придумайте пароль</string>
     <string name="contain">Пароль должен содержать:</string>
@@ -25,4 +25,5 @@
     <string name="eight_symbol">Не менее 8 символов</string>
     <string name="numbers">Цифры</string>
     <string name="capital_letter">Заглавные и строчные буквы латиницей</string>
+    <string name="newCode">Новый код будет доступен</string>
 </resources>

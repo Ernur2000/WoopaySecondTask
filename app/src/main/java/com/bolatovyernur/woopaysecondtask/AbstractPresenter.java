@@ -1,17 +1,11 @@
 package com.bolatovyernur.woopaysecondtask;
 
+import com.bolatovyernur.woopaysecondtask.api.Api;
 import com.bolatovyernur.woopaysecondtask.api.ApiService;
 
-import retrofit2.Response;
-
 public abstract class AbstractPresenter {
-    private ApiService apiService;
-
-    protected ApiService ApiService() {
+    private final ApiService apiService = Api.getInstance().getApi();
+    protected ApiService getApiService() {
         return apiService;
     }
-
-    public abstract void onSuccess(Response response);
-
-    public abstract void onError(Response response);
 }
