@@ -15,11 +15,20 @@ import androidx.navigation.Navigation;
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentPasswordBinding;
 
+import java.util.regex.Pattern;
+
 public class PasswordFragment extends Fragment implements PasswordView {
     private PasswordPresenter passwordPresenter;
     FragmentPasswordBinding fragmentPasswordBinding;
     private String activationCode;
     private String login;
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile("^" +
+                    "(?=.*[0-9])" +         //at least 1 digit
+                    "(?=.*[a-z])" +         //at least 1 lower case letter
+                    "(?=.*[A-Z])" +         //at least 1 upper case letter
+                    ".{8,}" +               //at least 4 characters
+                    "$");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,36 +39,52 @@ public class PasswordFragment extends Fragment implements PasswordView {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        passwordPresenter = new PasswordPresenter(errorResponse);
+        passwordPresenter = new PasswordPresenter();
         super.onViewCreated(view, savedInstanceState);
+        onBackPressed();
+        createWallet();
+        getArgument();
+        changeText();
+    }
+
+    public void onBackPressed() {
+        fragmentPasswordBinding.back.setOnClickListener(view1 -> {
+            Navigation.findNavController(view1).navigate(R.id.action_passwordFragment_to_smsFragment);
+        });
+    }
+
+    public void createWallet() {
+        fragmentPasswordBinding.btnCreateWallet.setOnClickListener(view1 -> {
+            passwordPresenter.createPassword(login, activationCode, fragmentPasswordBinding.edPickPassword.getText().toString(), this.getView());
+        });
+    }
+
+    public void getArgument() {
         if (getArguments() != null) {
             activationCode = getArguments().getString("activationCode");
             login = getArguments().getString("Auth");
         }
+    }
+
+    public void changeText() {
         fragmentPasswordBinding.edPickPassword.addTextChangedListener(new WrapperTextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
                 super.afterTextChanged(editable);
-                //заглваные буквы, латиница
-                //text > 8
+                String password1 = fragmentPasswordBinding.edPickPassword.getText().toString().trim();
+                String password2 = fragmentPasswordBinding.edRepeatPassword.getText().toString().trim();
+                fragmentPasswordBinding.btnCreateWallet.setEnabled(password1.equals(password2) && PASSWORD_PATTERN.matcher(password1).matches() && PASSWORD_PATTERN.matcher(password2).matches());
             }
         });
         fragmentPasswordBinding.edRepeatPassword.addTextChangedListener(new WrapperTextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
                 super.afterTextChanged(editable);
-                //совпадает с первым
+                String password1 = fragmentPasswordBinding.edPickPassword.getText().toString().trim();
+                String password2 = fragmentPasswordBinding.edRepeatPassword.getText().toString().trim();
+                fragmentPasswordBinding.btnCreateWallet.setEnabled(password1.equals(password2) && PASSWORD_PATTERN.matcher(password1).matches() && PASSWORD_PATTERN.matcher(password2).matches());
             }
         });
-        fragmentPasswordBinding.back.setOnClickListener(view1 -> {
-            Navigation.findNavController(view1).navigate(R.id.action_passwordFragment_to_smsFragment);
-        });
-
-        fragmentPasswordBinding.btnCreateWallet.setOnClickListener(view1 -> {
-            passwordPresenter.createPassword(login, activationCode, fragmentPasswordBinding.edPickPassword.getText().toString(), this.getView());
-        });
-
     }
 
     @Override

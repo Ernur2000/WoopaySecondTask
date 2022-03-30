@@ -4,23 +4,25 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.bolatovyernur.woopaysecondtask.registration.ErrorResponse;
+import com.bolatovyernur.woopaysecondtask.registration.ErrorResponses;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ResponseHandler<T> implements Callback<T> {
+public class ResponseHandler implements Callback {
     private final ResponseCallback responseCallback;
-    private final ErrorResponse errorResponse;
 
-    public ResponseHandler(ResponseCallback responseCallback, ErrorResponse errorResponse) {
+    private final ErrorResponses errorResponse;
+
+    public ResponseHandler(ResponseCallback responseCallback, ErrorResponses errorResponse) {
         this.responseCallback = responseCallback;
         this.errorResponse = errorResponse;
     }
 
+
     @Override
-    public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+    public void onResponse(@NonNull Call call, @NonNull Response response) {
         if (response.isSuccessful()) {
             responseCallback.onSuccess(response.body());
 
@@ -31,7 +33,7 @@ public class ResponseHandler<T> implements Callback<T> {
     }
 
     @Override
-    public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-        Log.d("error", t.getLocalizedMessage());
+    public void onFailure(@NonNull Call call, @NonNull Throwable t) {
+        t.printStackTrace();
     }
 }

@@ -1,9 +1,9 @@
 package com.bolatovyernur.woopaysecondtask.api;
 
-import com.bolatovyernur.woopaysecondtask.registration.ErrorResponse;
+import com.bolatovyernur.woopaysecondtask.registration.ErrorResponses;
 
 public interface ResponseCallback<T> {
     void onSuccess(T response);
 
-    void onError(ErrorResponse error);
+    void onError(ErrorResponses error);
 }

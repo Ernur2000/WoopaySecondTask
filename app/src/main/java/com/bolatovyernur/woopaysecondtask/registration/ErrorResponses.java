@@ -1,6 +1,6 @@
 package com.bolatovyernur.woopaysecondtask.registration;
 
-public class ErrorResponse {
+public class ErrorResponses {
     private String field;
     private String message;
     private int error_code;

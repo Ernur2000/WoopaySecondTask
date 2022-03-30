@@ -3,12 +3,15 @@ package com.bolatovyernur.woopaysecondtask.registration;
 public class RegisterRequest {
     private String login;
     private String email;
+
     public String getLogin() {
         return login;
     }
+
     public void setLogin(String login) {
         this.login = login;
     }
+
     public String getEmail() {
         return email;
     }

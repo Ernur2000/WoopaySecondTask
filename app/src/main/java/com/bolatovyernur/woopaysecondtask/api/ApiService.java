@@ -2,7 +2,7 @@ package com.bolatovyernur.woopaysecondtask.api;
 
 import com.bolatovyernur.woopaysecondtask.authentication.AuthRequest;
 import com.bolatovyernur.woopaysecondtask.category.CategoryRequest;
-import com.bolatovyernur.woopaysecondtask.registration.ErrorResponse;
+import com.bolatovyernur.woopaysecondtask.registration.ErrorResponses;
 import com.bolatovyernur.woopaysecondtask.registration.PasswordRequest;
 import com.bolatovyernur.woopaysecondtask.registration.RegisterRequest;
 import com.bolatovyernur.woopaysecondtask.registration.SmsRequest;
@@ -19,13 +19,13 @@ public interface ApiService {
     Call<AuthRequest> login(@Body AuthRequest authRequest);
 
     @POST("registration/create-account")
-    Call<ErrorResponse> register(@Body RegisterRequest registerRequest);
+    Call<ErrorResponses> register(@Body RegisterRequest registerRequest);
 
     @POST("registration/activate-account")
-    Call<List<ErrorResponse>> sendSms(@Body SmsRequest smsRequest);
+    Call<List<ErrorResponses>> sendSms(@Body SmsRequest smsRequest);
 
     @POST("registration/set-password")
-    Call<List<ErrorResponse>> createPassword(@Body PasswordRequest passwordRequest);
+    Call<List<ErrorResponses>> createPassword(@Body PasswordRequest passwordRequest);
 
     @GET("category/")
     Call<CategoryRequest> getCategory();

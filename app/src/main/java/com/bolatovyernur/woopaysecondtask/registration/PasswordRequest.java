@@ -2,15 +2,6 @@ package com.bolatovyernur.woopaysecondtask.registration;
 
 public class PasswordRequest {
     private String login;
-
-    public String getActivation_code() {
-        return activation_code;
-    }
-
-    public void setActivation_code(String activation_code) {
-        this.activation_code = activation_code;
-    }
-
     private String activation_code;
     private String password;
 
@@ -22,7 +13,13 @@ public class PasswordRequest {
         this.login = login;
     }
 
+    public String getActivation_code() {
+        return activation_code;
+    }
 
+    public void setActivation_code(String activation_code) {
+        this.activation_code = activation_code;
+    }
 
     public String getPassword() {
         return password;

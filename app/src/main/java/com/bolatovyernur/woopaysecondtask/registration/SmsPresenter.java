@@ -2,9 +2,8 @@ package com.bolatovyernur.woopaysecondtask.registration;
 
 import android.os.Bundle;
 import android.view.View;
-
+import android.widget.Toast;
 import androidx.navigation.Navigation;
-
 import com.bolatovyernur.woopaysecondtask.AbstractPresenter;
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.api.ResponseCallback;
@@ -12,18 +11,12 @@ import com.bolatovyernur.woopaysecondtask.api.ResponseHandler;
 
 public class SmsPresenter extends AbstractPresenter {
     SmsView smsView = new SmsFragment();
-    private ErrorResponse errorResponse;
-
-    public SmsPresenter(ErrorResponse errorResponse) {
-        this.errorResponse = errorResponse;
-    }
-
+    ErrorResponses error;
     public void sendSms(String login, String activationCode, View view) {
         SmsRequest smsRequest = new SmsRequest();
         smsRequest.setLogin(login);
         smsRequest.setActivation_code(activationCode);
-        //Call<List<ErrorResponse>> registerResponseCall = Api.getInstance().getApi().sendSms(smsRequest);
-        getApiService().sendSms(smsRequest).enqueue(new ResponseHandler<>(new ResponseCallback() {
+        getApiService().sendSms(smsRequest).enqueue(new ResponseHandler(new ResponseCallback() {
             @Override
             public void onSuccess(Object response) {
                 Bundle bundle = new Bundle();
@@ -34,11 +27,10 @@ public class SmsPresenter extends AbstractPresenter {
             }
 
             @Override
-            public void onError(ErrorResponse error) {
-                String message = error.getMessage();
-                smsView.onSmsErrorResponse(view,message);
+            public void onError(ErrorResponses error) {
+                Toast.makeText(view.getContext(), "server returned error",Toast.LENGTH_LONG).show();
             }
-        }, errorResponse));
+        }, error));
     }
 
 }
