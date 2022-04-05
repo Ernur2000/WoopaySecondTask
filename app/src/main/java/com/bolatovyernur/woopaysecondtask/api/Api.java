@@ -1,6 +1,7 @@
 package com.bolatovyernur.woopaysecondtask.api;
 
 import com.bolatovyernur.woopaysecondtask.util.Constants;
+import com.google.gson.Gson;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -16,7 +17,7 @@ public class Api {
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
         mRetrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .baseUrl(Constants.BASE_URL)
                 .client(okHttpClient)
                 .build();

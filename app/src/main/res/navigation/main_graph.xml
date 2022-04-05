@@ -7,16 +7,22 @@
 
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.RegistrationFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.Registration.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration" >
         <action
             android:id="@+id/action_registrationFragment_to_smsFragment"
             app:destination="@id/smsFragment" />
+        <action
+            android:id="@+id/action_registrationFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registrationFragment_to_mainPageFragment"
+            app:destination="@id/mainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/smsFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.SmsFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.Sms.SmsFragment"
         android:label="fragment_sms"
         tools:layout="@layout/fragment_sms" >
         <action
@@ -28,11 +34,31 @@
     </fragment>
     <fragment
         android:id="@+id/passwordFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.PasswordFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.Password.PasswordFragment"
         android:label="fragment_password"
         tools:layout="@layout/fragment_password" >
         <action
             android:id="@+id/action_passwordFragment_to_smsFragment"
             app:destination="@id/smsFragment" />
+        <action
+            android:id="@+id/action_passwordFragment_to_mainPageFragment"
+            app:destination="@id/mainPageFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.authentication.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_mainPageFragment"
+            app:destination="@id/mainPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainPageFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.mainPage.MainPageFragment"
+        android:label="fragment_main_page"
+        tools:layout="@layout/fragment_main_page" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration;
+package com.bolatovyernur.woopaysecondtask.registration.Sms;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentSmsBinding;
+import com.bolatovyernur.woopaysecondtask.registration.Registration.RegistrationPresenter;
+import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
 
 public class SmsFragment extends Fragment implements SmsView{
     FragmentSmsBinding fragmentSmsBinding;
@@ -22,7 +24,7 @@ public class SmsFragment extends Fragment implements SmsView{
     private int textLength = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentSmsBinding = FragmentSmsBinding.inflate(inflater,container,false);
         return fragmentSmsBinding.getRoot();
@@ -54,10 +56,7 @@ public class SmsFragment extends Fragment implements SmsView{
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if (fragmentSmsBinding.edSmsCode.getText().toString().trim().length() ==7){
-                    fragmentSmsBinding.btnNext.setEnabled(true);
-                }
-                else fragmentSmsBinding.btnNext.setEnabled(false);
+                fragmentSmsBinding.btnNext.setEnabled(fragmentSmsBinding.edSmsCode.getText().toString().trim().length() == 7);
             }
         }); }
     public void getArgument(){
@@ -68,22 +67,16 @@ public class SmsFragment extends Fragment implements SmsView{
         }
     }
     public void onBackPressed(){
-        fragmentSmsBinding.back.setOnClickListener(view1 -> {
-            Navigation.findNavController(view1).
-                    navigate(R.id.action_smsFragment_to_registrationFragment);
-        });
+        fragmentSmsBinding.back.setOnClickListener(view1 -> Navigation.findNavController(view1).
+                navigate(R.id.action_smsFragment_to_registrationFragment));
     }
     public void onNextPressed(){
         smsPresenter = new SmsPresenter();
-        fragmentSmsBinding.btnNext.setOnClickListener(view1 -> {
-            smsPresenter.sendSms(login,fragmentSmsBinding.edSmsCode.getText().toString().replace(" ",""),this.getView());
-        });
+        fragmentSmsBinding.btnNext.setOnClickListener(view1 -> smsPresenter.sendSms(login,fragmentSmsBinding.edSmsCode.getText().toString().replace(" ",""),this.getView()));
     }
     public void SendNewSms(){
         registrationPresenter = new RegistrationPresenter();
-        fragmentSmsBinding.btnNewCode.setOnClickListener(view -> {
-            registrationPresenter.register(login,email,view);
-        });
+        fragmentSmsBinding.btnNewCode.setOnClickListener(view -> registrationPresenter.register(login,email,view));
     }
     public void Timer(){
         new CountDownTimer(60000,1000){

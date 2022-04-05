@@ -1,6 +1,6 @@
 package com.bolatovyernur.woopaysecondtask.category;
 
-import com.bolatovyernur.woopaysecondtask.AbstractPresenter;
+import com.bolatovyernur.woopaysecondtask.api.AbstractPresenter;
 
 public class CategoryPresenter extends AbstractPresenter {
     AbstractPresenter abstractPresenter;

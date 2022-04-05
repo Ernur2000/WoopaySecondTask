@@ -26,4 +26,7 @@
     <string name="numbers">Цифры</string>
     <string name="capital_letter">Заглавные и строчные буквы латиницей</string>
     <string name="newCode">Новый код будет доступен</string>
+    <string name="haveAcc">У меня уже есть аккаунт</string>
+    <string name="no_acc">У меня еще нет аккаунта</string>
+    <string name="password_kiril">Пароль</string>
 </resources>

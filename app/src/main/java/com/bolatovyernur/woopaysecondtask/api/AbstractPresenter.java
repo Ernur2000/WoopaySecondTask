@@ -1,7 +1,4 @@
-package com.bolatovyernur.woopaysecondtask;
-
-import com.bolatovyernur.woopaysecondtask.api.Api;
-import com.bolatovyernur.woopaysecondtask.api.ApiService;
+package com.bolatovyernur.woopaysecondtask.api;
 
 public abstract class AbstractPresenter {
     private final ApiService apiService = Api.getInstance().getApi();

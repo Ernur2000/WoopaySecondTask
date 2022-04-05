@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration;
+package com.bolatovyernur.woopaysecondtask.util;
 
 import android.text.Editable;
 import android.text.TextWatcher;

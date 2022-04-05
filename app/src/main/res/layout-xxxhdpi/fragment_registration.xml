@@ -89,5 +89,18 @@
         android:textAllCaps="false"
         android:fontFamily="@font/inter_regular"
         android:background="@drawable/background_button"/>
+    <TextView
+        android:id="@+id/have_acc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:text="@string/haveAcc"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:fontFamily="@font/inter_regular"
+        android:layout_marginHorizontal="26dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

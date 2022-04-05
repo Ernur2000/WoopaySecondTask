@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration;
+package com.bolatovyernur.woopaysecondtask.registration.Sms;
 
 import android.view.View;
 

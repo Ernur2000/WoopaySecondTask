@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration;
+package com.bolatovyernur.woopaysecondtask.model;
 
 public class PasswordRequest {
     private String login;

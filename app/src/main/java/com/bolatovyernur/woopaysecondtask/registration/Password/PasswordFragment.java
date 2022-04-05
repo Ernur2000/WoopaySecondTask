@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration;
+package com.bolatovyernur.woopaysecondtask.registration.Password;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,10 +14,12 @@ import androidx.navigation.Navigation;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentPasswordBinding;
+import com.bolatovyernur.woopaysecondtask.registration.Registration.LogAfterRegView;
+import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
 
 import java.util.regex.Pattern;
 
-public class PasswordFragment extends Fragment implements PasswordView {
+public class PasswordFragment extends Fragment implements PasswordView, LogAfterRegView {
     private PasswordPresenter passwordPresenter;
     FragmentPasswordBinding fragmentPasswordBinding;
     private String activationCode;
@@ -31,7 +33,7 @@ public class PasswordFragment extends Fragment implements PasswordView {
                     "$");
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentPasswordBinding = FragmentPasswordBinding.inflate(inflater, container, false);
         return fragmentPasswordBinding.getRoot();
@@ -48,14 +50,13 @@ public class PasswordFragment extends Fragment implements PasswordView {
     }
 
     public void onBackPressed() {
-        fragmentPasswordBinding.back.setOnClickListener(view1 -> {
-            Navigation.findNavController(view1).navigate(R.id.action_passwordFragment_to_smsFragment);
-        });
+        fragmentPasswordBinding.back.setOnClickListener(view1 -> Navigation.findNavController(view1).navigate(R.id.action_passwordFragment_to_smsFragment));
     }
 
     public void createWallet() {
         fragmentPasswordBinding.btnCreateWallet.setOnClickListener(view1 -> {
             passwordPresenter.createPassword(login, activationCode, fragmentPasswordBinding.edPickPassword.getText().toString(), this.getView());
+            passwordPresenter.loginAfterRegister(login,fragmentPasswordBinding.edPickPassword.getText().toString(),getView());
         });
     }
 
@@ -90,5 +91,10 @@ public class PasswordFragment extends Fragment implements PasswordView {
     @Override
     public void onSuccessResponse(View view) {
         Toast.makeText(view.getContext(), "You successfully authorized", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSuccessLogin(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_mainPageFragment);
     }
 }

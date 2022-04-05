@@ -1,18 +1,50 @@
 package com.bolatovyernur.woopaysecondtask.authentication;
 
-import com.bolatovyernur.woopaysecondtask.AbstractPresenter;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+import com.bolatovyernur.woopaysecondtask.api.AbstractPresenter;
+import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
+import com.bolatovyernur.woopaysecondtask.api.ResponseCallback;
+import com.bolatovyernur.woopaysecondtask.api.ResponseHandler;
+import com.bolatovyernur.woopaysecondtask.model.AuthRequest;
+import com.bolatovyernur.woopaysecondtask.model.AuthResponse;
+import com.bolatovyernur.woopaysecondtask.model.ErrorResponses;
+import com.bolatovyernur.woopaysecondtask.util.Constants;
+import com.google.gson.JsonSyntaxException;
+import com.scottyab.aescrypt.AESCrypt;
+import java.security.GeneralSecurityException;
+import java.util.List;
 
 public class AuthPresenter extends AbstractPresenter {
-    AbstractPresenter abstractPresenter;
+    AuthView authView = new LoginFragment();
+    PreferenceUtils preferenceUtils;
 
-    public void login(String login, String password) {
+    public void login(String login, String password, View view) {
         AuthRequest authRequest = new AuthRequest();
         authRequest.setLogin(login);
         authRequest.setPassword(password);
-        //Call<AuthRequest> authRequestCall = Api.getInstance().getApi().login(authRequest);
-//        authRequestCall.enqueue(new ResponseHandler<AuthRequest>(abstractPresenter, responseCallback) {
-//        });
+       preferenceUtils = new PreferenceUtils(view.getContext());
+        getApiService().login(authRequest).enqueue(new ResponseHandler<>(new ResponseCallback<AuthResponse>() {
+            @Override
+            public void onSuccess(AuthResponse response) {
+                String encryptedMsg;
+                authView.onSuccessResponse(view);
+                try {
+                    encryptedMsg = AESCrypt.encrypt(login, password);
+                    Log.d("EncryptedMSG", encryptedMsg);
+                     preferenceUtils.saveString(Constants.KEY_EMAIL,login);
+                     preferenceUtils.saveString(Constants.KEY_PASSWORD,encryptedMsg);
+                } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
+                    Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onError(List<ErrorResponses> error) {
+                Log.d("Error", error.get(0).getMessage());
+                Toast.makeText(view.getContext(), error.get(0).getMessage() + "server returned error", Toast.LENGTH_LONG).show();
+            }
+        }));
     }
-
-
 }

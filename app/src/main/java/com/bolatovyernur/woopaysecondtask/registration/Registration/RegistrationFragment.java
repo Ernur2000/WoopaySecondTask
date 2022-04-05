@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration;
+package com.bolatovyernur.woopaysecondtask.registration.Registration;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -17,7 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentRegistrationBinding;
+import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
 
 public class RegistrationFragment extends Fragment implements RegistrationView{
     FragmentRegistrationBinding fragmentRegistrationBinding;
@@ -25,7 +29,7 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
     private int textLength = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentRegistrationBinding = FragmentRegistrationBinding
                 .inflate(inflater,container,false);
@@ -38,6 +42,7 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
         onNextPressed();
         changeText();
         makeText();
+        makeTextForHaveAcc();
     }
     public void onNextPressed(){
         registrationPresenter = new RegistrationPresenter();
@@ -74,20 +79,6 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
                     fragmentRegistrationBinding.btnNext.setEnabled(false);
                 }
             }
-
-            //            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                super.onTextChanged(charSequence, i, i1, i2);
-//                String email = fragmentRegistrationBinding.edEmail.getText().toString().trim();
-//                String login = fragmentRegistrationBinding.edLogin.getText().toString().trim();
-//                CheckBox checkBox = fragmentRegistrationBinding.checkbox;
-//                if (checkBox.isChecked() && !email.isEmpty() && !login.isEmpty()){
-//                    fragmentRegistrationBinding.btnNext.setEnabled(true);
-//                }
-//                else {
-//                    fragmentRegistrationBinding.btnNext.setEnabled(false);
-//                }
-//            }
         });
         fragmentRegistrationBinding.edLogin.addTextChangedListener(new WrapperTextWatcher(){
             @Override
@@ -144,8 +135,31 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
-    @Override
-    public void onRegistrationSuccessResponse(View view) {
+    public void makeTextForHaveAcc(){
+        SpannableString s1 = new SpannableString("У меня уже есть аккаунт");
+        ClickableSpan clickableSpan1 = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_loginFragment);
+            }
 
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+                ds.setColor(Color.rgb(28, 131, 255));
+            }
+        };
+        s1.setSpan(clickableSpan1, 7, 23, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        TextView textView = fragmentRegistrationBinding.haveAcc;
+        textView.setText(s1);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+    @Override
+    public void onRegistrationSuccessResponse(String login,String email) {
+        Bundle bundle = new Bundle();
+        bundle.putString("Auth", login);
+        bundle.putString("Email", email);
+        Navigation.findNavController(getView()).navigate(R.id.action_registrationFragment_to_smsFragment, bundle);
     }
 }
