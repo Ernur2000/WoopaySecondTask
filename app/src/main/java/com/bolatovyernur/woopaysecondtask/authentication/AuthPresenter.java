@@ -39,11 +39,10 @@ public class AuthPresenter extends AbstractPresenter {
                     Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onError(List<ErrorResponses> error) {
                 Log.d("Error", error.get(0).getMessage());
-                Toast.makeText(view.getContext(), error.get(0).getMessage() + "server returned error", Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(), error.get(0).getMessage(), Toast.LENGTH_LONG).show();
             }
         }));
     }

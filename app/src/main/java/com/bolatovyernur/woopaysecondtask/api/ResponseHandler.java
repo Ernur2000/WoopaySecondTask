@@ -27,14 +27,15 @@ public class ResponseHandler<T> implements Callback<T> {
     public void onResponse(@NonNull Call<T> call, Response<T> response) {
         if (response.isSuccessful()) {
             responseCallback.onSuccess((T) response.body());
-        }if(response.code()>=500){
+        }
+        if(response.code()>=500){
             Log.d("Fail", "Server side error");
         }
         else {
             if (response.errorBody() != null) {
                 try {
                     Type list =  new TypeToken<List<ErrorResponses>>(){}.getType();
-                    List<ErrorResponses> errorResponses =new Gson().fromJson(response.errorBody().string(), list);
+                    List<ErrorResponses> errorResponses = new Gson().fromJson(response.errorBody().string(), list);
                     responseCallback.onError(errorResponses);
                 } catch (IOException e) {
                     responseCallback.onError(null);

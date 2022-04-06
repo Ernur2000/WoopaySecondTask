@@ -12,6 +12,9 @@ public class PreferenceUtils {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefsEditor = prefs.edit();
     }
+    public static void deleteData(){
+        prefsEditor.clear().commit();
+    }
     public static void saveString(String key, String value) {
         prefsEditor.putString(key, value).apply();
     }

@@ -8,6 +8,8 @@ import com.bolatovyernur.woopaysecondtask.model.PasswordRequest;
 import com.bolatovyernur.woopaysecondtask.model.RegisterRequest;
 import com.bolatovyernur.woopaysecondtask.model.SmsRequest;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -21,10 +23,10 @@ public interface ApiService {
     Call<ErrorResponses> register(@Body RegisterRequest registerRequest);
 
     @POST("registration/activate-account")
-    Call<ErrorResponses> sendSms(@Body SmsRequest smsRequest);
+    Call<List<ErrorResponses>> sendSms(@Body SmsRequest smsRequest);
 
     @POST("registration/set-password")
-    Call<ErrorResponses> createPassword(@Body PasswordRequest passwordRequest);
+    Call<List<ErrorResponses>> createPassword(@Body PasswordRequest passwordRequest);
 
     @GET("category/")
     Call<CategoryRequest> getCategory();

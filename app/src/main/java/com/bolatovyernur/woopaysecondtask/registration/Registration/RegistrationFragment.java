@@ -14,19 +14,27 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentRegistrationBinding;
+import com.bolatovyernur.woopaysecondtask.util.Constants;
+import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
 import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
+import com.scottyab.aescrypt.AESCrypt;
 
-public class RegistrationFragment extends Fragment implements RegistrationView{
+import java.security.GeneralSecurityException;
+
+public class RegistrationFragment extends Fragment implements RegistrationView,LoginView{
     FragmentRegistrationBinding fragmentRegistrationBinding;
     private RegistrationPresenter registrationPresenter;
     private int textLength = 0;
+    PreferenceUtils preferenceUtils;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -156,10 +164,33 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
     @Override
-    public void onRegistrationSuccessResponse(String login,String email) {
+    public void onRegistrationSuccessResponse(String login,String email,View view) {
         Bundle bundle = new Bundle();
         bundle.putString("Auth", login);
         bundle.putString("Email", email);
-        Navigation.findNavController(getView()).navigate(R.id.action_registrationFragment_to_smsFragment, bundle);
+        Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_smsFragment, bundle);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        preferenceUtils = new PreferenceUtils(getContext());
+        String login = preferenceUtils.getString(Constants.KEY_EMAIL);
+        String password = preferenceUtils.getString(Constants.KEY_PASSWORD);
+        if (login!=null && password!=null){
+            try {
+                String messageAfterDecrypt = AESCrypt.decrypt(login, password);
+                Log.d("DecryptedMSG",messageAfterDecrypt);
+                registrationPresenter.login(login,messageAfterDecrypt,getView());
+            }catch (GeneralSecurityException e){
+                Toast.makeText(getContext(),"Incorrect password",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+    @Override
+    public void onSuccessResponse(String login, String password, View view) {
+        Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_mainPageFragment);
     }
 }

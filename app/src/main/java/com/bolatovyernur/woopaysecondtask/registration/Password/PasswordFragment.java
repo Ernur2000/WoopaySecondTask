@@ -56,7 +56,7 @@ public class PasswordFragment extends Fragment implements PasswordView, LogAfter
     public void createWallet() {
         fragmentPasswordBinding.btnCreateWallet.setOnClickListener(view1 -> {
             passwordPresenter.createPassword(login, activationCode, fragmentPasswordBinding.edPickPassword.getText().toString(), this.getView());
-            passwordPresenter.loginAfterRegister(login,fragmentPasswordBinding.edPickPassword.getText().toString(),getView());
+            //passwordPresenter.loginAfterRegister(login,fragmentPasswordBinding.edPickPassword.getText().toString(),getView());
         });
     }
 
@@ -95,6 +95,6 @@ public class PasswordFragment extends Fragment implements PasswordView, LogAfter
 
     @Override
     public void onSuccessLogin(View view) {
-        Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_mainPageFragment);
+        Navigation.findNavController(view).navigate(R.id.action_passwordFragment_to_mainPageFragment);
     }
 }

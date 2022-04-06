@@ -12,13 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentSmsBinding;
-import com.bolatovyernur.woopaysecondtask.registration.Registration.RegistrationPresenter;
 import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
 
 public class SmsFragment extends Fragment implements SmsView{
     FragmentSmsBinding fragmentSmsBinding;
     private SmsPresenter smsPresenter;
-    private RegistrationPresenter registrationPresenter;
     private String login;
     private String email;
     private int textLength = 0;
@@ -33,12 +31,12 @@ public class SmsFragment extends Fragment implements SmsView{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        smsPresenter = new SmsPresenter();
         getArgument();
         Timer();
         onBackPressed();
         onNextPressed();
         changedText();
-        SendNewSms();
     }
     public void changedText(){
         fragmentSmsBinding.edSmsCode.addTextChangedListener(new WrapperTextWatcher() {
@@ -71,12 +69,7 @@ public class SmsFragment extends Fragment implements SmsView{
                 navigate(R.id.action_smsFragment_to_registrationFragment));
     }
     public void onNextPressed(){
-        smsPresenter = new SmsPresenter();
         fragmentSmsBinding.btnNext.setOnClickListener(view1 -> smsPresenter.sendSms(login,fragmentSmsBinding.edSmsCode.getText().toString().replace(" ",""),this.getView()));
-    }
-    public void SendNewSms(){
-        registrationPresenter = new RegistrationPresenter();
-        fragmentSmsBinding.btnNewCode.setOnClickListener(view -> registrationPresenter.register(login,email,view));
     }
     public void Timer(){
         new CountDownTimer(60000,1000){
@@ -88,11 +81,23 @@ public class SmsFragment extends Fragment implements SmsView{
             public void onFinish() {
                 fragmentSmsBinding.btnNewCode.setText("Отправить код повторно");
                 fragmentSmsBinding.btnNewCode.setEnabled(true);
+                fragmentSmsBinding.btnNewCode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        smsPresenter.sendNewSms(login,email,view);
+                        fragmentSmsBinding.btnNewCode.setEnabled(false);
+                        Timer();
+                    }
+                });
             }
         }.start();
     }
     @Override
-    public void onSmsSuccessResponse(View view) {
+    public void onSmsSuccessResponse(String login,String activationCode,View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString("Auth", login);
+        bundle.putString("activationCode", activationCode);
+        Navigation.findNavController(view).navigate(R.id.action_smsFragment_to_passwordFragment, bundle);
     }
 
 }

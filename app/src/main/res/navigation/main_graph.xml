@@ -60,5 +60,9 @@
         android:id="@+id/mainPageFragment"
         android:name="com.bolatovyernur.woopaysecondtask.mainPage.MainPageFragment"
         android:label="fragment_main_page"
-        tools:layout="@layout/fragment_main_page" />
+        tools:layout="@layout/fragment_main_page" >
+        <action
+            android:id="@+id/action_mainPageFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
 </navigation>

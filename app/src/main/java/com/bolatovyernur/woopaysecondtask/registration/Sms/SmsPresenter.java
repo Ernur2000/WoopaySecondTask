@@ -1,15 +1,13 @@
 package com.bolatovyernur.woopaysecondtask.registration.Sms;
 
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import androidx.navigation.Navigation;
 import com.bolatovyernur.woopaysecondtask.api.AbstractPresenter;
-import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.api.ResponseCallback;
 import com.bolatovyernur.woopaysecondtask.api.ResponseHandler;
 import com.bolatovyernur.woopaysecondtask.model.ErrorResponses;
+import com.bolatovyernur.woopaysecondtask.model.RegisterRequest;
 import com.bolatovyernur.woopaysecondtask.model.SmsRequest;
 
 import java.util.List;
@@ -20,22 +18,33 @@ public class SmsPresenter extends AbstractPresenter {
         SmsRequest smsRequest = new SmsRequest();
         smsRequest.setLogin(login);
         smsRequest.setActivation_code(activationCode);
-        getApiService().sendSms(smsRequest).enqueue(new ResponseHandler<>(new ResponseCallback<ErrorResponses>() {
+        getApiService().sendSms(smsRequest).enqueue(new ResponseHandler<>(new ResponseCallback<List<ErrorResponses>>() {
+            @Override
+            public void onSuccess(List<ErrorResponses> response) {
+                smsView.onSmsSuccessResponse(login,activationCode,view);
+            }
+            @Override
+            public void onError(List<ErrorResponses> error) {
+                Log.d("Error", error.get(0).getMessage());
+                Toast.makeText(view.getContext(), error.get(0).getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }));
+    }
+    public void sendNewSms(String login,String email,View view){
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setLogin(login);
+        registerRequest.setEmail(email);
+        getApiService().register(registerRequest).enqueue(new ResponseHandler<>(new ResponseCallback<ErrorResponses>() {
             @Override
             public void onSuccess(ErrorResponses response) {
-                Bundle bundle = new Bundle();
-                bundle.putString("Auth",login);
-                bundle.putString("activationCode",activationCode);
-                Navigation.findNavController(view).navigate(R.id.action_smsFragment_to_passwordFragment, bundle);
-                smsView.onSmsSuccessResponse(view);
+                Toast.makeText(view.getContext(), "New sms sent", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(List<ErrorResponses> error) {
                 Log.d("Error", error.get(0).getMessage());
-                Toast.makeText(view.getContext(), error.get(0).getMessage() + "server returned error", Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(), error.get(0).getMessage(), Toast.LENGTH_LONG).show();
             }
         }));
     }
-
 }
