@@ -18,13 +18,11 @@ import java.util.List;
 
 public class AuthPresenter extends AbstractPresenter {
     AuthView authView = new LoginFragment();
-    PreferenceUtils preferenceUtils;
 
     public void login(String login, String password, View view) {
         AuthRequest authRequest = new AuthRequest();
         authRequest.setLogin(login);
         authRequest.setPassword(password);
-       preferenceUtils = new PreferenceUtils(view.getContext());
         getApiService().login(authRequest).enqueue(new ResponseHandler<>(new ResponseCallback<AuthResponse>() {
             @Override
             public void onSuccess(AuthResponse response) {
@@ -33,8 +31,8 @@ public class AuthPresenter extends AbstractPresenter {
                 try {
                     encryptedMsg = AESCrypt.encrypt(login, password);
                     Log.d("EncryptedMSG", encryptedMsg);
-                     preferenceUtils.saveString(Constants.KEY_EMAIL,login);
-                     preferenceUtils.saveString(Constants.KEY_PASSWORD,encryptedMsg);
+                     PreferenceUtils.saveString(Constants.KEY_EMAIL,login);
+                     PreferenceUtils.saveString(Constants.KEY_PASSWORD,encryptedMsg);
                 } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
                     Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }

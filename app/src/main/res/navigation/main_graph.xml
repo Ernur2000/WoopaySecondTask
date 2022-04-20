@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/registrationFragment">
+    app:startDestination="@id/mainPageFragment">
 
     <fragment
         android:id="@+id/registrationFragment"
@@ -64,5 +64,28 @@
         <action
             android:id="@+id/action_mainPageFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_pinCodePageFragment"
+            app:destination="@id/pinCodePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pinCodePageFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.PinCodePage.PinCodePageFragment"
+        android:label="PinCodePageFragment" >
+        <action
+            android:id="@+id/action_pinCodePageFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
+        <action
+            android:id="@+id/action_pinCodePageFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.category.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_categoryFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

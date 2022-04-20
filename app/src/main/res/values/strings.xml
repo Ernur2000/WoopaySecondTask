@@ -30,4 +30,10 @@
     <string name="no_acc">У меня еще нет аккаунта</string>
     <string name="password_kiril">Пароль</string>
     <string name="log_out">Log Out</string>
+    <string name="pin_info">Код быстрого доступа</string>
+    <string name="topService">Топ сервисы</string>
+    <string name="serviceCategory">Категории</string>
+    <string name="service_name">Сервис</string>
+    <string name="platform">Платформа</string>
+    <string name="forgotPass">Забыл Пин</string>
 </resources>

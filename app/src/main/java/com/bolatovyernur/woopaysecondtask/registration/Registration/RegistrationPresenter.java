@@ -14,7 +14,6 @@ import java.util.List;
 
 public class RegistrationPresenter extends AbstractPresenter {
     RegistrationView registrationView = new RegistrationFragment();
-    LoginView loginView = new RegistrationFragment();
     public void register(String login, String email, View view) {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setLogin(login);
@@ -29,22 +28,6 @@ public class RegistrationPresenter extends AbstractPresenter {
             public void onError(List<ErrorResponses> error) {
                 Log.d("Error", error.get(0).getMessage());
                 Toast.makeText(view.getContext(), error.get(0).getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }));
-    }
-    public void login(String login,String password, View view){
-        AuthRequest authRequest = new AuthRequest();
-        authRequest.setLogin(login);
-        authRequest.setPassword(password);
-        getApiService().login(authRequest).enqueue(new ResponseHandler<>(new ResponseCallback<AuthResponse>() {
-            @Override
-            public void onSuccess(AuthResponse response) {
-                loginView.onSuccessResponse(login,password,view);
-            }
-
-            @Override
-            public void onError(List<ErrorResponses> error) {
-
             }
         }));
     }

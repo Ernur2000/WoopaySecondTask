@@ -30,7 +30,7 @@ import com.scottyab.aescrypt.AESCrypt;
 
 import java.security.GeneralSecurityException;
 
-public class RegistrationFragment extends Fragment implements RegistrationView,LoginView{
+public class RegistrationFragment extends Fragment implements RegistrationView{
     FragmentRegistrationBinding fragmentRegistrationBinding;
     private RegistrationPresenter registrationPresenter;
     private int textLength = 0;
@@ -169,28 +169,5 @@ public class RegistrationFragment extends Fragment implements RegistrationView,L
         bundle.putString("Auth", login);
         bundle.putString("Email", email);
         Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_smsFragment, bundle);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        preferenceUtils = new PreferenceUtils(getContext());
-        String login = preferenceUtils.getString(Constants.KEY_EMAIL);
-        String password = preferenceUtils.getString(Constants.KEY_PASSWORD);
-        if (login!=null && password!=null){
-            try {
-                String messageAfterDecrypt = AESCrypt.decrypt(login, password);
-                Log.d("DecryptedMSG",messageAfterDecrypt);
-                registrationPresenter.login(login,messageAfterDecrypt,getView());
-            }catch (GeneralSecurityException e){
-                Toast.makeText(getContext(),"Incorrect password",Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-
-    @Override
-    public void onSuccessResponse(String login, String password, View view) {
-        Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_mainPageFragment);
     }
 }
