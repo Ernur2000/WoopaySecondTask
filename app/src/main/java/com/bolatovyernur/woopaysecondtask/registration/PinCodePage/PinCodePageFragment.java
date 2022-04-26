@@ -1,7 +1,10 @@
 package com.bolatovyernur.woopaysecondtask.registration.PinCodePage;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +20,23 @@ import androidx.navigation.Navigation;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentPinCodePageBinding;
+import com.bolatovyernur.woopaysecondtask.util.Constants;
 import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
+import com.scottyab.aescrypt.AESCrypt;
 
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-public class PinCodePageFragment extends Fragment {
+public class PinCodePageFragment extends Fragment implements PinCodePageView{
     private FragmentPinCodePageBinding binding;
     private final ArrayList<String> numbers_list = new ArrayList<>();
-    private PreferenceUtils preferenceUtils;
+    PreferenceUtils preferenceUtils;
     private String passCode = "";
     private String num_01, num_02, num_03, num_04;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    PinCodePagePresenter presenter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -41,6 +48,7 @@ public class PinCodePageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter = new PinCodePagePresenter();
         preferenceUtils = new PreferenceUtils(getContext());
         if (PreferenceUtils.getString("passCode")!=null){
             binding.textPinCode.setText("Введите пин-код для быстрого доступа к приложению");
@@ -80,6 +88,10 @@ public class PinCodePageFragment extends Fragment {
         promptInfo = new BiometricPrompt.PromptInfo.Builder().setTitle("Здравстсвуйте")
                 .setDescription("Use FingerPrint to Login").setNegativeButtonText("Отмена").build();
         setOnClickListener();
+        String answer = PreferenceUtils.getString("Answer");
+        if (answer!=null && answer.equals("no")){
+            binding.icTouchId.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setOnClickListener() {
@@ -133,10 +145,7 @@ public class PinCodePageFragment extends Fragment {
     }
 
     private void passNumber(ArrayList<String> numbers_list) {
-        binding.line1.setBackgroundResource(R.drawable.ic_default_line_grey_2);
-        binding.line2.setBackgroundResource(R.drawable.ic_default_line_grey_2);
-        binding.line3.setBackgroundResource(R.drawable.ic_default_line_grey_2);
-        binding.line4.setBackgroundResource(R.drawable.ic_default_line_grey_2);
+        setBackgroundToGrey2();
         switch (numbers_list.size()) {
             case 1:
                 num_01 = numbers_list.get(0);
@@ -160,14 +169,10 @@ public class PinCodePageFragment extends Fragment {
                 binding.line3.setBackgroundResource(R.drawable.bg_line);
                 binding.line4.setBackgroundResource(R.drawable.bg_line);
                 passCode = num_01 + num_02 + num_03 + num_04;
-                Log.d("Log", String.valueOf(numbers_list));
                 if (PreferenceUtils.getString("passCode") == null) {
                     PreferenceUtils.saveString("passCode", passCode);
                     numbers_list.clear();
-                    binding.line1.setBackgroundResource(R.drawable.ic_default_line_grey_2);
-                    binding.line2.setBackgroundResource(R.drawable.ic_default_line_grey_2);
-                    binding.line3.setBackgroundResource(R.drawable.ic_default_line_grey_2);
-                    binding.line4.setBackgroundResource(R.drawable.ic_default_line_grey_2);
+                    setBackgroundToGrey2();
                     binding.textPinCode.setText("Повторите пин-код");
                 } else {
                     matchPassCode();
@@ -176,10 +181,37 @@ public class PinCodePageFragment extends Fragment {
         }
 
     }
+    private void setBackgroundToGrey2(){
+        binding.line1.setBackgroundResource(R.drawable.ic_default_line_grey_2);
+        binding.line2.setBackgroundResource(R.drawable.ic_default_line_grey_2);
+        binding.line3.setBackgroundResource(R.drawable.ic_default_line_grey_2);
+        binding.line4.setBackgroundResource(R.drawable.ic_default_line_grey_2);
+    }
 
     private void matchPassCode() {
         if (PreferenceUtils.getString("passCode").equals(passCode)) {
-            Navigation.findNavController(getView()).navigate(R.id.action_pinCodePageFragment_to_categoryFragment);
+            if(binding.icTouchId.getVisibility()==View.VISIBLE){
+                String ans = PreferenceUtils.getString("Answer");
+                if (ans!=null){
+                    login();
+                }else{
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("Безопасность");
+                    alertDialog.setMessage("Использовать отпечаток пальца для входа");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Да", (dialogInterface, i) -> {
+                        PreferenceUtils.saveString("Answer","yes");
+                        login();
+                    });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Отмена",(dialogInterface, i) -> {
+                        PreferenceUtils.saveString("Answer","no");
+                        login();
+                        binding.icTouchId.setVisibility(View.INVISIBLE);
+                    });
+                    alertDialog.show();
+                }
+            }else{
+                login();
+            }
         } else {
             Toast.makeText(getContext(), "Passcode doesn't match please retry again!", Toast.LENGTH_LONG).show();
             numbers_list.clear();
@@ -188,5 +220,20 @@ public class PinCodePageFragment extends Fragment {
             binding.line3.setBackgroundResource(R.drawable.ic_default_line_grey_2);
             binding.line4.setBackgroundResource(R.drawable.ic_default_line_grey_2);
         }
+    }
+    private void login(){
+        String login = PreferenceUtils.getString(Constants.KEY_EMAIL);
+        String password = PreferenceUtils.getString(Constants.KEY_PASSWORD);
+        try {
+            String messageAfterDecrypt = AESCrypt.decrypt(login, password);
+            presenter.login(login,messageAfterDecrypt,getView());
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onSuccessResponse(View view,String token) {
+        Navigation.findNavController(view).navigate(R.id.action_pinCodePageFragment_to_categoryFragment);
     }
 }

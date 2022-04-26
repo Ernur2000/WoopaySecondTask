@@ -16,10 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentCategoryBinding;
-import com.bolatovyernur.woopaysecondtask.model.CategoryResponse;
+import com.bolatovyernur.woopaysecondtask.db.Category;
 import com.bolatovyernur.woopaysecondtask.model.TopServiceResponse;
 import com.bolatovyernur.woopaysecondtask.util.Constants;
 import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
+import com.google.gson.JsonSyntaxException;
 import com.scottyab.aescrypt.AESCrypt;
 
 import java.security.GeneralSecurityException;
@@ -30,7 +31,6 @@ public class CategoryFragment extends Fragment implements CategoryView {
     FragmentCategoryBinding binding;
     LinearLayoutManager layoutManagerHorizontal, layoutManagerVertical;
     CategoryPresenter categoryPresenter;
-    private ArrayList<TopServiceResponse> topServiceResponses = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,18 +50,15 @@ public class CategoryFragment extends Fragment implements CategoryView {
         binding.rvTopService.setHasFixedSize(true);
 
         categoryPresenter = new CategoryPresenter(this);
-
-        String token = PreferenceUtils.getString(Constants.KEY_TOKEN);
         String login = PreferenceUtils.getString(Constants.KEY_EMAIL);
+        String token = PreferenceUtils.getString(Constants.KEY_TOKEN);
         try {
             String messageAfterDecrypt = AESCrypt.decrypt(login, token);
-            Log.d("DecryptedMSG", messageAfterDecrypt);
-            categoryPresenter.getTopService(messageAfterDecrypt, getView());
-        } catch (GeneralSecurityException e) {
-            Toast.makeText(getContext(), "Incorrect password", Toast.LENGTH_LONG).show();
+            categoryPresenter.getTopServices(view, messageAfterDecrypt,binding.progressBar);
+        } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
+            Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
-        //categoryPresenter.getCategories(getView(),binding.progressBar);
-        categoryPresenter.readDB(view);
+        categoryPresenter.readServiceCategory(view);
         binding.logOut.setOnClickListener(view1 -> {
             PreferenceUtils.deleteData();
             Navigation.findNavController(view).navigate(R.id.action_categoryFragment_to_loginFragment);
@@ -77,14 +74,14 @@ public class CategoryFragment extends Fragment implements CategoryView {
     }
 
     @Override
-    public void putDataIntoRecyclerView(List<TopServiceResponse> topServiceResponses, View view) {
-        TopServiceAdapter adapter = new TopServiceAdapter((ArrayList<TopServiceResponse>) topServiceResponses);
+    public void putTopServiceDataToRecyclerView(List<TopServiceResponse> service, View view) {
+        TopServiceAdapter adapter = new TopServiceAdapter((ArrayList<TopServiceResponse>) service, view.getContext());
         binding.rvTopService.setAdapter(adapter);
     }
 
     @Override
-    public void putCategoryDataIntoRecyclerView(List<CategoryResponse> categoryResponses, View view) {
-        CategoryAdapter categoryAdapter = new CategoryAdapter(view.getContext(), (ArrayList<CategoryResponse>) categoryResponses);
+    public void putCategoryDataToRecyclerView(List<Category> categories, View view) {
+        CategoryAdapter categoryAdapter = new CategoryAdapter(view.getContext(), (ArrayList<Category>) categories);
         binding.rvCategory.setAdapter(categoryAdapter);
     }
 }

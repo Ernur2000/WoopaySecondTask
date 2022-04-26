@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.authentication;
+package com.bolatovyernur.woopaysecondtask.registration.PinCodePage;
 
 import android.view.View;
 import android.widget.Toast;
@@ -17,11 +17,8 @@ import com.scottyab.aescrypt.AESCrypt;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-
-public class AuthPresenter extends AbstractPresenter {
-    AuthView authView = new LoginFragment();
+public class PinCodePagePresenter extends AbstractPresenter {
+    PinCodePageView pinCodePageView = new PinCodePageFragment();
 
     public void login(String login, String password, View view) {
         AuthRequest authRequest = new AuthRequest();
@@ -30,20 +27,19 @@ public class AuthPresenter extends AbstractPresenter {
         getApiService().login(authRequest).enqueue(new ResponseHandler<>(new ResponseCallback<AuthResponse>() {
             @Override
             public void onSuccess(AuthResponse response) {
-                String encryptedMsg;
-                authView.onSuccessResponse(view);
+                String token = response.getToken();
                 try {
-                    encryptedMsg = AESCrypt.encrypt(login, password);
-                    PreferenceUtils.saveString(Constants.KEY_EMAIL, login);
-                    PreferenceUtils.saveString(Constants.KEY_PASSWORD, encryptedMsg);
-                } catch (GeneralSecurityException exception) {
+                    String encryptedToken = AESCrypt.encrypt(login, token);
+                    PreferenceUtils.saveString(Constants.KEY_TOKEN, encryptedToken);
+                } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
                     Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
+                pinCodePageView.onSuccessResponse(view, token);
             }
 
             @Override
             public void onError(List<ErrorResponses> error) {
-                Toast.makeText(view.getContext(), error.get(0).getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(), "error", Toast.LENGTH_LONG).show();
             }
         }));
     }

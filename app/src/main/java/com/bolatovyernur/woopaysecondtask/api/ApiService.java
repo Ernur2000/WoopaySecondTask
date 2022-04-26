@@ -16,6 +16,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @POST("auth")
@@ -34,5 +35,5 @@ public interface ApiService {
     Call<List<CategoryResponse>> getCategory();
 
     @GET("service-top")
-    Call<List<TopServiceResponse>> getTopService(@Header("Authorization") String token);
+    Call<List<TopServiceResponse>> getTopService(@Header("Authorization") String token,@Query("expand") String expand,@Query("platform") String platform);
 }

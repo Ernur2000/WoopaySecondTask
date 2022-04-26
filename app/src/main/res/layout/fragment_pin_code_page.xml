@@ -13,26 +13,6 @@
         tools:ignore="HardcodedText,ContentDescription">
 
         <ImageView
-            android:id="@+id/ic_exit"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="16dp"
-            android:padding="3dp"
-            android:src="@drawable/ic_default_exit"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ic_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_default_user"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
             android:id="@+id/iv_user"
             android:layout_width="90dp"
             android:layout_height="90dp"
@@ -40,7 +20,7 @@
             android:src="@drawable/ic_profile_pin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ic_exit" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/tv_greeting"

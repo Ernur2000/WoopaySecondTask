@@ -11,16 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bolatovyernur.woopaysecondtask.R;
+import com.bolatovyernur.woopaysecondtask.db.Category;
 import com.bolatovyernur.woopaysecondtask.model.CategoryResponse;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-    private ArrayList<CategoryResponse> categoryResponses;
+    private ArrayList<Category> categoryResponses;
     private Context mContext;
 
-    public CategoryAdapter(Context context, ArrayList<CategoryResponse> categoryResponses) {
+    public CategoryAdapter(Context context, ArrayList<Category> categoryResponses) {
         this.mContext = context;
         this.categoryResponses = categoryResponses;
     }
@@ -35,11 +36,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.title.setText(categoryResponses.get(position).getTitle());
-        holder.name.setText(categoryResponses.get(position).getName());
+        holder.title.setText(categoryResponses.get(position).title);
+        holder.name.setText(categoryResponses.get(position).name);
         Glide.with(mContext)
                 .asBitmap()
-                .load(categoryResponses.get(position).getPicture_url())
+                .load(categoryResponses.get(position).picture_url)
                 .into(holder.icon);
     }
 
