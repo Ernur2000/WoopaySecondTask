@@ -2,13 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:dither="true" android:shape="ring"  android:thicknessRatio="2" android:useLevel="false" android:innerRadius="0dp" android:visible="true" >
-            <solid android:color="#2F82D2" />
+            <solid android:color="#FFF" />
             <size android:width="20dp" android:height="20dp" />
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape android:dither="true" android:shape="ring"  android:thicknessRatio="2" android:useLevel="false" android:innerRadius="0dp" android:visible="true" >
-            <solid android:color="#EBEBEB" />
+            <solid android:color="#FFF" />
             <size android:width="20dp" android:height="20dp" />
         </shape>
     </item>

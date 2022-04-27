@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Yernur/.gradle/caches/transforms-3/887688c264796078c8b7df3948b90668/transformed/jetified-passcodeview-0.1.2/res/drawable/bg_circle_red.xml" value="0.137" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/drawable-v24/background_round_pin_code.xml" value="0.1575" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/drawable-v24/ic_default_exit.xml" value="0.1575" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/drawable-v24/ic_default_line_grey_2.xml" value="0.1575" />
@@ -43,12 +44,12 @@
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_login.xml" value="0.25" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_main_page.xml" value="0.11030354852501069" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_password.xml" value="0.15405405405405406" />
-        <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_pin_code_page.xml" value="0.11030354852501069" />
+        <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_pin_code_page.xml" value="0.16799999999999998" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_registration.xml" value="0.264" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/fragment_sms.xml" value="0.1125" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout-xxxhdpi/service_item.xml" value="0.264" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/activity_main.xml" value="0.14583333333333334" />
-        <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/category_item.xml" value="0.264" />
+        <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/category_item.xml" value="0.72" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/fragment_auth.xml" value="0.264" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/fragment_category.xml" value="0.4" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/fragment_login.xml" value="0.13388157894736843" />
@@ -57,7 +58,7 @@
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/fragment_pin_code_page.xml" value="0.4787234042553192" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/fragment_registration.xml" value="0.176" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/fragment_sms.xml" value="0.536" />
-        <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/service_item.xml" value="0.264" />
+        <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/layout/service_item.xml" value="0.8800000000000001" />
         <entry key="..\:/Users/Yernur/AndroidStudioProjects/WoopaySecondTask/app/src/main/res/menu/menu.xml" value="0.14583333333333334" />
       </map>
     </option>

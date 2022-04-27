@@ -33,7 +33,7 @@ public class CategoryFragment extends Fragment implements CategoryView {
     CategoryPresenter categoryPresenter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCategoryBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -54,13 +54,13 @@ public class CategoryFragment extends Fragment implements CategoryView {
         String token = PreferenceUtils.getString(Constants.KEY_TOKEN);
         try {
             String messageAfterDecrypt = AESCrypt.decrypt(login, token);
-            categoryPresenter.getTopServices(view, messageAfterDecrypt,binding.progressBar);
+            categoryPresenter.getTopServices(view, messageAfterDecrypt, binding.progressBar);
         } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
             Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         categoryPresenter.readServiceCategory(view);
         binding.logOut.setOnClickListener(view1 -> {
-            PreferenceUtils.deleteData();
+            PreferenceUtils.deleteAllData();
             Navigation.findNavController(view).navigate(R.id.action_categoryFragment_to_loginFragment);
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {

@@ -11,28 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="HardcodedText,ContentDescription">
-
-        <ImageView
-            android:id="@+id/iv_user"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/ic_profile_pin"
+        <TextView
+            android:id="@+id/tv_greeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:textColor="#8492A6"
+            android:gravity="center"
+            android:layout_marginHorizontal="70dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/tv_greeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/pin_info"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_user" />
 
         <View
             android:id="@+id/line1"
@@ -80,16 +69,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="70dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:gravity="center"
-            android:textColor="#8492A6"
+            android:textColor="#DA2C2C"
             app:layout_constraintBottom_toTopOf="@id/grid_pins" />
 
         <GridLayout
             android:id="@+id/grid_pins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="65dp"
             android:columnCount="3"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -200,6 +189,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_margin="12dp"
+                android:visibility="invisible"
                 android:background="@drawable/background_round_pin_code"
                 android:padding="20dp"
                 android:src="@drawable/ic_pin_code_touch_id" />
@@ -230,6 +220,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/grid_pins"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/forgotPass"

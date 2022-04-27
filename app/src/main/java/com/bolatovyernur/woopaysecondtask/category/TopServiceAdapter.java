@@ -1,12 +1,10 @@
 package com.bolatovyernur.woopaysecondtask.category;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 
 public class TopServiceAdapter extends RecyclerView.Adapter<TopServiceAdapter.ViewHolder> {
     private final ArrayList<TopServiceResponse> mTopServiceResponse;
-    private Context mContext;
+    private final Context mContext;
 
     public TopServiceAdapter(ArrayList<TopServiceResponse> topServiceResponses, Context context) {
         mTopServiceResponse = topServiceResponses;
@@ -34,11 +32,8 @@ public class TopServiceAdapter extends RecyclerView.Adapter<TopServiceAdapter.Vi
     }
 
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.name.setText(mTopServiceResponse.get(position).getName());
-        holder.platform.setText(mTopServiceResponse.get(position).getPlatform());
         Glide.with(mContext)
                 .asBitmap()
                 .load(mTopServiceResponse.get(position).getService().getPicture_url())
@@ -50,15 +45,11 @@ public class TopServiceAdapter extends RecyclerView.Adapter<TopServiceAdapter.Vi
         return mTopServiceResponse.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView platform;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.tv_service_name);
-            platform = itemView.findViewById(R.id.tv_platform);
             imageView = itemView.findViewById(R.id.iv_picture);
         }
     }

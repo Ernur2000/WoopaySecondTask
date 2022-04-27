@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.db.Category;
-import com.bolatovyernur.woopaysecondtask.model.CategoryResponse;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-    private ArrayList<Category> categoryResponses;
-    private Context mContext;
+    private final ArrayList<Category> categoryResponses;
+    private final Context mContext;
 
     public CategoryAdapter(Context context, ArrayList<Category> categoryResponses) {
         this.mContext = context;
@@ -30,14 +29,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.category_item, parent, false);
-//        binding = ServiceItemBinding.inflate(LayoutInflater.from(mContext),parent,false);
-        return new CategoryAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.title.setText(categoryResponses.get(position).title);
-        holder.name.setText(categoryResponses.get(position).name);
         Glide.with(mContext)
                 .asBitmap()
                 .load(categoryResponses.get(position).picture_url)
@@ -49,16 +46,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         return categoryResponses.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title;
-        TextView name;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.iv_icon);
             title = itemView.findViewById(R.id.tv_title);
-            name = itemView.findViewById(R.id.tv_name);
         }
     }
 }

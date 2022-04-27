@@ -12,7 +12,7 @@ public class PreferenceUtils {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefsEditor = prefs.edit();
     }
-    public static void deleteData(){
+    public static void deleteAllData(){
         prefsEditor.clear().commit();
     }
     public static void saveString(String key, String value) {
@@ -21,5 +21,8 @@ public class PreferenceUtils {
 
     public static String getString(String key) {
         return prefs.getString(key, null);
+    }
+    public static void deleteData(String s){
+        prefsEditor.remove(s).commit();
     }
 }

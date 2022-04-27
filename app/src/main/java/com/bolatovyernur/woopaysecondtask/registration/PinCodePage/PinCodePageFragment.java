@@ -1,10 +1,12 @@
 package com.bolatovyernur.woopaysecondtask.registration.PinCodePage;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-public class PinCodePageFragment extends Fragment implements PinCodePageView{
+public class PinCodePageFragment extends Fragment implements PinCodePageView {
     private FragmentPinCodePageBinding binding;
     private final ArrayList<String> numbers_list = new ArrayList<>();
     PreferenceUtils preferenceUtils;
@@ -37,6 +39,8 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView{
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
     PinCodePagePresenter presenter;
+    private int numberOfRemainingLoginAttempts = 3;
+    String decrypt;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -45,15 +49,16 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView{
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter = new PinCodePagePresenter();
         preferenceUtils = new PreferenceUtils(getContext());
-        if (PreferenceUtils.getString("passCode")!=null){
-            binding.textPinCode.setText("Введите пин-код для быстрого доступа к приложению");
-        }else {
-            binding.textPinCode.setText("Установите пин-код для быстрого доступа к приложению");
+        if (PreferenceUtils.getString("passCode") != null) {
+            binding.tvGreeting.setText("Введите пин-код для быстрого доступа к приложению");
+        } else {
+            binding.tvGreeting.setText("Установите пин-код для быстрого доступа к приложению");
         }
         BiometricManager biometricManager = BiometricManager.from(view.getContext());
         switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
@@ -89,8 +94,8 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView{
                 .setDescription("Use FingerPrint to Login").setNegativeButtonText("Отмена").build();
         setOnClickListener();
         String answer = PreferenceUtils.getString("Answer");
-        if (answer!=null && answer.equals("no")){
-            binding.icTouchId.setVisibility(View.INVISIBLE);
+        if (answer != null && answer.equals("yes")) {
+            binding.icTouchId.setVisibility(View.VISIBLE);
         }
     }
 
@@ -137,7 +142,7 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView{
             passNumber(numbers_list);
         });
         binding.icDelete.setOnClickListener(view1 -> {
-            if (numbers_list.size()==0) return;
+            if (numbers_list.size() == 0) return;
             numbers_list.remove(numbers_list.size() - 1);
             passNumber(numbers_list);
         });
@@ -170,10 +175,15 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView{
                 binding.line4.setBackgroundResource(R.drawable.bg_line);
                 passCode = num_01 + num_02 + num_03 + num_04;
                 if (PreferenceUtils.getString("passCode") == null) {
-                    PreferenceUtils.saveString("passCode", passCode);
+                    try {
+                        String encryptedMessage = AESCrypt.encrypt("passCode", passCode);
+                        PreferenceUtils.saveString("passCode", encryptedMessage);
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
+                    }
                     numbers_list.clear();
                     setBackgroundToGrey2();
-                    binding.textPinCode.setText("Повторите пин-код");
+                    binding.tvGreeting.setText("Повторите пин-код");
                 } else {
                     matchPassCode();
                 }
@@ -181,59 +191,85 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView{
         }
 
     }
-    private void setBackgroundToGrey2(){
+
+    private void setBackgroundToGrey2() {
         binding.line1.setBackgroundResource(R.drawable.ic_default_line_grey_2);
         binding.line2.setBackgroundResource(R.drawable.ic_default_line_grey_2);
         binding.line3.setBackgroundResource(R.drawable.ic_default_line_grey_2);
         binding.line4.setBackgroundResource(R.drawable.ic_default_line_grey_2);
     }
 
+    private void login() {
+        String login = PreferenceUtils.getString(Constants.KEY_EMAIL);
+        String password = PreferenceUtils.getString(Constants.KEY_PASSWORD);
+        try {
+            String messageAfterDecrypt = AESCrypt.decrypt(login, password);
+            presenter.login(login, messageAfterDecrypt, getView());
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void matchPassCode() {
-        if (PreferenceUtils.getString("passCode").equals(passCode)) {
-            if(binding.icTouchId.getVisibility()==View.VISIBLE){
-                String ans = PreferenceUtils.getString("Answer");
-                if (ans!=null){
-                    login();
-                }else{
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("Безопасность");
-                    alertDialog.setMessage("Использовать отпечаток пальца для входа");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Да", (dialogInterface, i) -> {
-                        PreferenceUtils.saveString("Answer","yes");
-                        login();
-                    });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Отмена",(dialogInterface, i) -> {
-                        PreferenceUtils.saveString("Answer","no");
-                        login();
-                        binding.icTouchId.setVisibility(View.INVISIBLE);
-                    });
-                    alertDialog.show();
-                }
-            }else{
+        try {
+            String pin = PreferenceUtils.getString("passCode");
+            decrypt = AESCrypt.decrypt("passCode", pin);
+            Log.d("Message", decrypt);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+        if (decrypt.equals(passCode)) {
+            String ans = PreferenceUtils.getString("Answer");
+            if (ans != null) {
                 login();
+            } else {
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                alertDialog.setTitle("Безопасность");
+                alertDialog.setMessage("Использовать отпечаток пальца для входа");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Да", (dialogInterface, i) -> {
+                    PreferenceUtils.saveString("Answer", "yes");
+                    login();
+                    binding.icTouchId.setVisibility(View.VISIBLE);
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Отмена", (dialogInterface, i) -> {
+                    PreferenceUtils.saveString("Answer", "no");
+                    login();
+                });
+                alertDialog.show();
             }
         } else {
-            Toast.makeText(getContext(), "Passcode doesn't match please retry again!", Toast.LENGTH_LONG).show();
+            Vibrator vibrator = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(500);
+            if (binding.tvGreeting.getText() == "Повторите пин-код") {
+                binding.textPinCode.setText("Код не совпадает");
+            } else {
+                final Handler handler = new Handler();
+                @SuppressLint("SetTextI18n") Runnable runnable = () -> {
+                    if (numberOfRemainingLoginAttempts == 2) {
+                        binding.textPinCode.setText("Осталось " + numberOfRemainingLoginAttempts + " попытки");
+                    } else {
+                        binding.textPinCode.setText("Осталось " + numberOfRemainingLoginAttempts + " попытка");
+                    }
+                    handler.removeMessages(0);
+                };
+                handler.postDelayed(runnable, 1000);
+                binding.textPinCode.setText("Неверный код");
+                numberOfRemainingLoginAttempts--;
+            }
             numbers_list.clear();
             binding.line1.setBackgroundResource(R.drawable.ic_default_line_grey_2);
             binding.line2.setBackgroundResource(R.drawable.ic_default_line_grey_2);
             binding.line3.setBackgroundResource(R.drawable.ic_default_line_grey_2);
             binding.line4.setBackgroundResource(R.drawable.ic_default_line_grey_2);
         }
-    }
-    private void login(){
-        String login = PreferenceUtils.getString(Constants.KEY_EMAIL);
-        String password = PreferenceUtils.getString(Constants.KEY_PASSWORD);
-        try {
-            String messageAfterDecrypt = AESCrypt.decrypt(login, password);
-            presenter.login(login,messageAfterDecrypt,getView());
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+        if (numberOfRemainingLoginAttempts == 0) {
+            Navigation.findNavController(requireView()).navigate(R.id.action_pinCodePageFragment_to_loginFragment);
+            PreferenceUtils.deleteData("passCode");
         }
     }
 
     @Override
-    public void onSuccessResponse(View view,String token) {
+    public void onSuccessResponse(View view) {
         Navigation.findNavController(view).navigate(R.id.action_pinCodePageFragment_to_categoryFragment);
     }
 }

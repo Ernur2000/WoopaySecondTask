@@ -34,7 +34,7 @@ public class PinCodePagePresenter extends AbstractPresenter {
                 } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
                     Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
-                pinCodePageView.onSuccessResponse(view, token);
+                pinCodePageView.onSuccessResponse(view);
             }
 
             @Override
