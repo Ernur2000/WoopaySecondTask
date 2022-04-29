@@ -1,8 +1,15 @@
 package com.bolatovyernur.woopaysecondtask.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class SmsRequest {
+    @SerializedName("login")
+    @Expose
     private String login;
-    private String activation_code;
+    @SerializedName("activation_code")
+    @Expose
+    private String activationCode;
 
     public String getLogin() {
         return login;
@@ -12,10 +19,10 @@ public class SmsRequest {
         this.login = login;
     }
 
-    public String getActivation_code() {
-        return activation_code;
+    public String getActivationCode() {
+        return activationCode;
     }
 
-    public void setActivation_code(String activation_code) { this.activation_code = activation_code; }
+    public void setActivationCode(String activationCode) { this.activationCode = activationCode; }
 
 }

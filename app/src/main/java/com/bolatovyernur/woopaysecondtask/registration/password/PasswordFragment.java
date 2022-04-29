@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.Password;
+package com.bolatovyernur.woopaysecondtask.registration.password;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,7 +14,7 @@ import androidx.navigation.Navigation;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentPasswordBinding;
-import com.bolatovyernur.woopaysecondtask.registration.Registration.LogAfterRegView;
+import com.bolatovyernur.woopaysecondtask.registration.registration.LogAfterRegView;
 import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
 
 import java.util.regex.Pattern;
@@ -54,10 +54,7 @@ public class PasswordFragment extends Fragment implements PasswordView, LogAfter
     }
 
     public void createWallet() {
-        fragmentPasswordBinding.btnCreateWallet.setOnClickListener(view1 -> {
-            passwordPresenter.createPassword(login, activationCode, fragmentPasswordBinding.edPickPassword.getText().toString(), this.getView());
-            //passwordPresenter.loginAfterRegister(login,fragmentPasswordBinding.edPickPassword.getText().toString(),getView());
-        });
+        fragmentPasswordBinding.btnCreateWallet.setOnClickListener(view1 -> passwordPresenter.createPassword(login, activationCode, fragmentPasswordBinding.edPickPassword.getText().toString(), requireView()));
     }
 
     public void getArgument() {

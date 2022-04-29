@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.Registration.RegistrationFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.registration.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/smsFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.Sms.SmsFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.sms.SmsFragment"
         android:label="fragment_sms"
         tools:layout="@layout/fragment_sms" >
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/passwordFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.Password.PasswordFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.registration.password.PasswordFragment"
         android:label="fragment_password"
         tools:layout="@layout/fragment_password" >
         <action
@@ -67,10 +67,13 @@
         <action
             android:id="@+id/action_mainPageFragment_to_pinCodePageFragment"
             app:destination="@id/pinCodePageFragment" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/pinCodePageFragment"
-        android:name="com.bolatovyernur.woopaysecondtask.registration.PinCodePage.PinCodePageFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.pinCodePage.PinCodePageFragment"
         android:label="PinCodePageFragment" >
         <action
             android:id="@+id/action_pinCodePageFragment_to_categoryFragment"
@@ -87,5 +90,13 @@
         <action
             android:id="@+id/action_categoryFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_categoryDetailFragment"
+            app:destination="@id/categoryDetailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/categoryDetailFragment"
+        android:name="com.bolatovyernur.woopaysecondtask.category.CategoryDetailFragment"
+        android:label="fragment_category_detail"
+        tools:layout="@layout/fragment_category_detail" />
 </navigation>

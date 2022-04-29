@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.Sms;
+package com.bolatovyernur.woopaysecondtask.registration.sms;
 
 import android.util.Log;
 import android.view.View;
@@ -17,7 +17,7 @@ public class SmsPresenter extends AbstractPresenter {
     public void sendSms(String login, String activationCode, View view) {
         SmsRequest smsRequest = new SmsRequest();
         smsRequest.setLogin(login);
-        smsRequest.setActivation_code(activationCode);
+        smsRequest.setActivationCode(activationCode);
         getApiService().sendSms(smsRequest).enqueue(new ResponseHandler<>(new ResponseCallback<List<ErrorResponses>>() {
             @Override
             public void onSuccess(List<ErrorResponses> response) {

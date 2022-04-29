@@ -45,7 +45,7 @@ public class LoginFragment extends Fragment implements AuthView {
 
     public void onNextPressed() {
         authPresenter = new AuthPresenter();
-        fragmentLoginBinding.btnNext.setOnClickListener(view1 -> authPresenter.login(fragmentLoginBinding.edLogin.getText().toString(), fragmentLoginBinding.edPassword.getText().toString(), getView()));
+        fragmentLoginBinding.btnNext.setOnClickListener(view1 -> authPresenter.login(fragmentLoginBinding.edLogin.getText().toString(), fragmentLoginBinding.edPassword.getText().toString(), requireView()));
     }
 
     public void makeText() {

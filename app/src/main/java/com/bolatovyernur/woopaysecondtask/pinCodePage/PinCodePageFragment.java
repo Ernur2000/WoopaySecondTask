@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.PinCodePage;
+package com.bolatovyernur.woopaysecondtask.pinCodePage;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -22,7 +22,6 @@ import androidx.navigation.Navigation;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentPinCodePageBinding;
-import com.bolatovyernur.woopaysecondtask.util.Constants;
 import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
 import com.scottyab.aescrypt.AESCrypt;
 
@@ -33,14 +32,18 @@ import java.util.concurrent.Executor;
 public class PinCodePageFragment extends Fragment implements PinCodePageView {
     private FragmentPinCodePageBinding binding;
     private final ArrayList<String> numbers_list = new ArrayList<>();
-    PreferenceUtils preferenceUtils;
     private String passCode = "";
-    private String num_01, num_02, num_03, num_04;
+    private String num_01;
+    private String num_02;
+    private String num_03;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
-    PinCodePagePresenter presenter;
+    private PinCodePagePresenter presenter;
     private int numberOfRemainingLoginAttempts = 3;
-    String decrypt;
+    private String decrypt;
+    private BiometricManager biometricManager;
+    private PreferenceUtils preferenceUtils;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -53,25 +56,31 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        init();
+        setBiometricPrompt();
+        setOnClickListener();
+        setVisibilities();
+    }
+    private void init(){
         presenter = new PinCodePagePresenter();
         preferenceUtils = new PreferenceUtils(getContext());
-        if (PreferenceUtils.getString("passCode") != null) {
-            binding.tvGreeting.setText("Введите пин-код для быстрого доступа к приложению");
-        } else {
-            binding.tvGreeting.setText("Установите пин-код для быстрого доступа к приложению");
+        biometricManager = BiometricManager.from(requireContext());
+    }
+    private void setBiometricPrompt(){
+        int state = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK);
+        if (state == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE) {
+            Toast.makeText(getContext(), "Device doesn't have a fingerPrint", Toast.LENGTH_LONG).show();
+            binding.icTouchId.setVisibility(View.INVISIBLE);
+        } else if (state == BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE) {
+            Toast.makeText(getContext(), "Not working", Toast.LENGTH_LONG).show();
+            binding.icTouchId.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(), "No fingerPrint assigned", Toast.LENGTH_LONG).show();
+            binding.icTouchId.setVisibility(View.INVISIBLE);
+        } else if (state == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
+            Toast.makeText(getContext(), "No fingerPrint assigned", Toast.LENGTH_LONG).show();
+            binding.icTouchId.setVisibility(View.INVISIBLE);
         }
-        BiometricManager biometricManager = BiometricManager.from(view.getContext());
-        switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
-            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Toast.makeText(getContext(), "Device doesn't have a fingerPrint", Toast.LENGTH_LONG).show();
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Toast.makeText(getContext(), "Not working", Toast.LENGTH_LONG).show();
-            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                Toast.makeText(getContext(), "No fingerPrint assigned", Toast.LENGTH_LONG).show();
-
-        }
-        Executor executor = ContextCompat.getMainExecutor(view.getContext());
+        Executor executor = ContextCompat.getMainExecutor(requireContext());
         biometricPrompt = new BiometricPrompt(requireActivity(), executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
@@ -82,7 +91,7 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 Toast.makeText(getContext(), "Login Success", Toast.LENGTH_LONG).show();
-                Navigation.findNavController(view).navigate(R.id.action_pinCodePageFragment_to_categoryFragment);
+                Navigation.findNavController(requireView()).navigate(R.id.action_pinCodePageFragment_to_categoryFragment);
             }
 
             @Override
@@ -92,15 +101,30 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
         });
         promptInfo = new BiometricPrompt.PromptInfo.Builder().setTitle("Здравстсвуйте")
                 .setDescription("Use FingerPrint to Login").setNegativeButtonText("Отмена").build();
-        setOnClickListener();
-        String answer = PreferenceUtils.getString("Answer");
+    }
+
+    private void setVisibilities(){
+        String answer = preferenceUtils.getString("Answer");
         if (answer != null && answer.equals("yes")) {
             binding.icTouchId.setVisibility(View.VISIBLE);
         }
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            if (bundle.getString("flag").equals("enter")) {
+                binding.forgotPass.setVisibility(View.VISIBLE);
+                binding.tvGreeting.setText("Введите пин-код для быстрого доступа к приложению");
+            } else {
+                binding.forgotPass.setVisibility(View.INVISIBLE);
+                binding.tvGreeting.setText("Установите пин-код для быстрого доступа к приложению");
+            }
+        }
     }
-
     private void setOnClickListener() {
-        binding.forgotPass.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_pinCodePageFragment_to_loginFragment));
+        binding.icTouchId.setOnClickListener(view -> biometricPrompt.authenticate(promptInfo));
+        binding.forgotPass.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_pinCodePageFragment_to_loginFragment);
+            preferenceUtils.deleteData("passCode");
+        });
         binding.number1.setOnClickListener(view1 -> {
             numbers_list.add("1");
             passNumber(numbers_list);
@@ -146,7 +170,6 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
             numbers_list.remove(numbers_list.size() - 1);
             passNumber(numbers_list);
         });
-        binding.icTouchId.setOnClickListener(view -> biometricPrompt.authenticate(promptInfo));
     }
 
     private void passNumber(ArrayList<String> numbers_list) {
@@ -168,16 +191,16 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
                 binding.line3.setBackgroundResource(R.drawable.bg_line);
                 break;
             case 4:
-                num_04 = numbers_list.get(3);
+                String num_04 = numbers_list.get(3);
                 binding.line2.setBackgroundResource(R.drawable.bg_line);
                 binding.line1.setBackgroundResource(R.drawable.bg_line);
                 binding.line3.setBackgroundResource(R.drawable.bg_line);
                 binding.line4.setBackgroundResource(R.drawable.bg_line);
                 passCode = num_01 + num_02 + num_03 + num_04;
-                if (PreferenceUtils.getString("passCode") == null) {
+                if (preferenceUtils.getString("passCode") == null) {
                     try {
                         String encryptedMessage = AESCrypt.encrypt("passCode", passCode);
-                        PreferenceUtils.saveString("passCode", encryptedMessage);
+                        preferenceUtils.saveString("passCode", encryptedMessage);
                     } catch (GeneralSecurityException e) {
                         e.printStackTrace();
                     }
@@ -200,42 +223,31 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
     }
 
     private void login() {
-        String login = PreferenceUtils.getString(Constants.KEY_EMAIL);
-        String password = PreferenceUtils.getString(Constants.KEY_PASSWORD);
-        try {
-            String messageAfterDecrypt = AESCrypt.decrypt(login, password);
-            presenter.login(login, messageAfterDecrypt, getView());
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
+        presenter.login(requireView());
     }
 
     private void matchPassCode() {
         try {
-            String pin = PreferenceUtils.getString("passCode");
+            String pin = preferenceUtils.getString("passCode");
             decrypt = AESCrypt.decrypt("passCode", pin);
             Log.d("Message", decrypt);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         }
         if (decrypt.equals(passCode)) {
-            String ans = PreferenceUtils.getString("Answer");
+            String ans = preferenceUtils.getString("Answer");
             if (ans != null) {
                 login();
             } else {
-                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                alertDialog.setTitle("Безопасность");
-                alertDialog.setMessage("Использовать отпечаток пальца для входа");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Да", (dialogInterface, i) -> {
-                    PreferenceUtils.saveString("Answer", "yes");
+                if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                        == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE || biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                        == BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE || biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                        == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
+                    binding.icTouchId.setVisibility(View.INVISIBLE);
                     login();
-                    binding.icTouchId.setVisibility(View.VISIBLE);
-                });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Отмена", (dialogInterface, i) -> {
-                    PreferenceUtils.saveString("Answer", "no");
-                    login();
-                });
-                alertDialog.show();
+                } else {
+                    AlertDialog();
+                }
             }
         } else {
             Vibrator vibrator = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
@@ -264,8 +276,24 @@ public class PinCodePageFragment extends Fragment implements PinCodePageView {
         }
         if (numberOfRemainingLoginAttempts == 0) {
             Navigation.findNavController(requireView()).navigate(R.id.action_pinCodePageFragment_to_loginFragment);
-            PreferenceUtils.deleteData("passCode");
+            preferenceUtils.deleteData("passCode");
         }
+    }
+
+    private void AlertDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog.setTitle("Безопасность");
+        alertDialog.setMessage("Использовать отпечаток пальца для входа");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Да", (dialogInterface, i) -> {
+            preferenceUtils.saveString("Answer", "yes");
+            login();
+            binding.icTouchId.setVisibility(View.VISIBLE);
+        });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Отмена", (dialogInterface, i) -> {
+            preferenceUtils.saveString("Answer", "no");
+            login();
+        });
+        alertDialog.show();
     }
 
     @Override

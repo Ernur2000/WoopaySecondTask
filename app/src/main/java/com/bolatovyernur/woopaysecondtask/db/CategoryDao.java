@@ -13,11 +13,5 @@ public interface CategoryDao {
     List<Category> getAllCategories();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCategories(Category... categories);
-
-    @Query("SELECT * FROM SERVICE_TABLE")
-    List<Service> getAllTopServices();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertTopServices(Service... services);
+    void insertCategories(List<Category> categories);
 }

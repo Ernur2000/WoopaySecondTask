@@ -11,19 +11,17 @@ import com.bolatovyernur.woopaysecondtask.model.AuthResponse;
 import com.bolatovyernur.woopaysecondtask.model.ErrorResponses;
 import com.bolatovyernur.woopaysecondtask.util.Constants;
 import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
-import com.google.gson.JsonSyntaxException;
 import com.scottyab.aescrypt.AESCrypt;
 
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-
 public class AuthPresenter extends AbstractPresenter {
     AuthView authView = new LoginFragment();
+    PreferenceUtils preferenceUtils;
 
     public void login(String login, String password, View view) {
+        preferenceUtils = new PreferenceUtils(view.getContext());
         AuthRequest authRequest = new AuthRequest();
         authRequest.setLogin(login);
         authRequest.setPassword(password);
@@ -34,8 +32,8 @@ public class AuthPresenter extends AbstractPresenter {
                 authView.onSuccessResponse(view);
                 try {
                     encryptedMsg = AESCrypt.encrypt(login, password);
-                    PreferenceUtils.saveString(Constants.KEY_EMAIL, login);
-                    PreferenceUtils.saveString(Constants.KEY_PASSWORD, encryptedMsg);
+                    preferenceUtils.saveString(Constants.KEY_EMAIL, login);
+                    preferenceUtils.saveString(Constants.KEY_PASSWORD, encryptedMsg);
                 } catch (GeneralSecurityException exception) {
                     Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }

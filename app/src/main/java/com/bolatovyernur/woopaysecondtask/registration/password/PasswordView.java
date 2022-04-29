@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.Password;
+package com.bolatovyernur.woopaysecondtask.registration.password;
 
 import android.view.View;
 

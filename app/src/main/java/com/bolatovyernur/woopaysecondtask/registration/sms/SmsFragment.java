@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.Sms;
+package com.bolatovyernur.woopaysecondtask.registration.sms;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -81,13 +81,10 @@ public class SmsFragment extends Fragment implements SmsView{
             public void onFinish() {
                 fragmentSmsBinding.btnNewCode.setText("Отправить код повторно");
                 fragmentSmsBinding.btnNewCode.setEnabled(true);
-                fragmentSmsBinding.btnNewCode.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        smsPresenter.sendNewSms(login,email,view);
-                        fragmentSmsBinding.btnNewCode.setEnabled(false);
-                        Timer();
-                    }
+                fragmentSmsBinding.btnNewCode.setOnClickListener(view -> {
+                    smsPresenter.sendNewSms(login,email,view);
+                    fragmentSmsBinding.btnNewCode.setEnabled(false);
+                    Timer();
                 });
             }
         }.start();

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bolatovyernur.woopaysecondtask.R;
@@ -39,6 +40,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 .asBitmap()
                 .load(categoryResponses.get(position).picture_url)
                 .into(holder.icon);
+        holder.cardView.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_categoryFragment_to_categoryDetailFragment));
     }
 
     @Override
@@ -49,11 +51,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title;
+        View cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.iv_icon);
             title = itemView.findViewById(R.id.tv_title);
+            cardView = itemView.findViewById(R.id.categoryCard);
         }
     }
 }

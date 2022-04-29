@@ -1,12 +1,9 @@
-package com.bolatovyernur.woopaysecondtask.registration.Password;
+package com.bolatovyernur.woopaysecondtask.registration.password;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.navigation.Navigation;
-
-import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.api.AbstractPresenter;
 import com.bolatovyernur.woopaysecondtask.api.ResponseCallback;
 import com.bolatovyernur.woopaysecondtask.api.ResponseHandler;
@@ -14,7 +11,7 @@ import com.bolatovyernur.woopaysecondtask.model.AuthRequest;
 import com.bolatovyernur.woopaysecondtask.model.AuthResponse;
 import com.bolatovyernur.woopaysecondtask.model.ErrorResponses;
 import com.bolatovyernur.woopaysecondtask.model.PasswordRequest;
-import com.bolatovyernur.woopaysecondtask.registration.Registration.LogAfterRegView;
+import com.bolatovyernur.woopaysecondtask.registration.registration.LogAfterRegView;
 import com.bolatovyernur.woopaysecondtask.util.Constants;
 import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
 import com.google.gson.JsonSyntaxException;
@@ -28,9 +25,10 @@ public class PasswordPresenter extends AbstractPresenter {
     LogAfterRegView logAfterRegView = new PasswordFragment();
     PreferenceUtils preferenceUtils;
     public void createPassword(String login, String activationCode, String password, View view) {
+        preferenceUtils = new PreferenceUtils(view.getContext());
         PasswordRequest passwordRequest = new PasswordRequest();
         passwordRequest.setLogin(login);
-        passwordRequest.setActivation_code(activationCode);
+        passwordRequest.setActivationCode(activationCode);
         passwordRequest.setPassword(password);
         getApiService().createPassword(passwordRequest).enqueue(new ResponseHandler<>(new ResponseCallback<List<ErrorResponses>>() {
             @Override

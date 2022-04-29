@@ -1,46 +1,38 @@
-package com.bolatovyernur.woopaysecondtask.registration.Registration;
+package com.bolatovyernur.woopaysecondtask.registration.registration;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentRegistrationBinding;
-import com.bolatovyernur.woopaysecondtask.util.Constants;
-import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
 import com.bolatovyernur.woopaysecondtask.util.WrapperTextWatcher;
-import com.scottyab.aescrypt.AESCrypt;
 
-import java.security.GeneralSecurityException;
-
-public class RegistrationFragment extends Fragment implements RegistrationView{
+public class RegistrationFragment extends Fragment implements RegistrationView {
     FragmentRegistrationBinding fragmentRegistrationBinding;
     private RegistrationPresenter registrationPresenter;
     private int textLength = 0;
-    PreferenceUtils preferenceUtils;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentRegistrationBinding = FragmentRegistrationBinding
-                .inflate(inflater,container,false);
+                .inflate(inflater, container, false);
         return fragmentRegistrationBinding.getRoot();
     }
 
@@ -52,70 +44,69 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
         makeText();
         makeTextForHaveAcc();
     }
-    public void onNextPressed(){
+
+    public void onNextPressed() {
         registrationPresenter = new RegistrationPresenter();
         fragmentRegistrationBinding.btnNext.setOnClickListener(view1 ->
-                registrationPresenter.register(fragmentRegistrationBinding.edLogin.getText().toString().replace(" ",""),fragmentRegistrationBinding.edEmail.getText().toString(),this.getView())
+                registrationPresenter.register(fragmentRegistrationBinding.edLogin.getText().toString().replace(" ", ""), fragmentRegistrationBinding.edEmail.getText().toString(), this.getView())
         );
     }
-    public void changeText(){
+
+    public void changeText() {
         fragmentRegistrationBinding.checkbox.setOnClickListener(view1 -> {
             String email = fragmentRegistrationBinding.edEmail.getText().toString().trim();
             String login = fragmentRegistrationBinding.edLogin.getText().toString().trim();
-            if(fragmentRegistrationBinding.checkbox.isChecked()) {
-                if(login.length()==15&&email.length()>=8){
+            if (fragmentRegistrationBinding.checkbox.isChecked()) {
+                if (login.length() == 15 && email.length() >= 8) {
                     fragmentRegistrationBinding.btnNext.setEnabled(true);
                 }
-            }
-            else {
+            } else {
                 fragmentRegistrationBinding.btnNext.setEnabled(false);
             }
         });
-        fragmentRegistrationBinding.edEmail.addTextChangedListener(new WrapperTextWatcher(){
+        fragmentRegistrationBinding.edEmail.addTextChangedListener(new WrapperTextWatcher() {
             @SuppressLint("SetTextI18n")
             @Override
             public void afterTextChanged(Editable editable) {
                 super.afterTextChanged(editable);
                 String email = fragmentRegistrationBinding.edEmail.getText().toString().trim();
                 String login = fragmentRegistrationBinding.edLogin.getText().toString().trim();
-                if(fragmentRegistrationBinding.checkbox.isChecked()) {
-                    if(login.length()==15&&email.length()>=8){
+                if (fragmentRegistrationBinding.checkbox.isChecked()) {
+                    if (login.length() == 15 && email.length() >= 8) {
                         fragmentRegistrationBinding.btnNext.setEnabled(true);
                     }
-                }
-                else {
+                } else {
                     fragmentRegistrationBinding.btnNext.setEnabled(false);
                 }
             }
         });
-        fragmentRegistrationBinding.edLogin.addTextChangedListener(new WrapperTextWatcher(){
+        fragmentRegistrationBinding.edLogin.addTextChangedListener(new WrapperTextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
                 super.afterTextChanged(editable);
                 String email = fragmentRegistrationBinding.edEmail.getText().toString().trim();
                 String login = fragmentRegistrationBinding.edLogin.getText().toString().trim();
-                if(fragmentRegistrationBinding.checkbox.isChecked()) {
-                    if(login.length()==15&&email.length()>=8){
+                if (fragmentRegistrationBinding.checkbox.isChecked()) {
+                    if (login.length() == 15 && email.length() >= 8) {
                         fragmentRegistrationBinding.btnNext.setEnabled(true);
                     }
-                }
-                else {
+                } else {
                     fragmentRegistrationBinding.btnNext.setEnabled(false);
                 }
                 String text = fragmentRegistrationBinding.edLogin.getText().toString();
                 textLength = fragmentRegistrationBinding.edLogin.getText().length();
-                if (text.endsWith(" ") || (text.endsWith("+"))){
+                if (text.endsWith(" ") || (text.endsWith("+"))) {
                     return;
                 }
-                switch (textLength){
+                switch (textLength) {
                     case 1:
-                        fragmentRegistrationBinding.edLogin.setText(new StringBuilder(text).insert(textLength-1, "+").toString());
+                        fragmentRegistrationBinding.edLogin.setText(new StringBuilder(text).insert(textLength - 1, "+").toString());
                         fragmentRegistrationBinding.edLogin.setSelection(fragmentRegistrationBinding.edLogin.getText().length());
                         break;
                     case 6:
                     case 10:
                     case 13:
-                        fragmentRegistrationBinding.edLogin.setText(new StringBuilder(text).insert(textLength-1, " ").toString());
+                        fragmentRegistrationBinding.edLogin.setText(new StringBuilder(text).insert(textLength - 1, " ").toString());
                         fragmentRegistrationBinding.edLogin.setSelection(fragmentRegistrationBinding.edLogin.getText().length());
                         break;
                 }
@@ -123,7 +114,8 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
             }
         });
     }
-    private void makeText(){
+
+    private void makeText() {
         SpannableString ss = new SpannableString("Принимаю пользовательское \nсоглашение Wooppay");
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
@@ -143,7 +135,8 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
-    public void makeTextForHaveAcc(){
+
+    public void makeTextForHaveAcc() {
         SpannableString s1 = new SpannableString("У меня уже есть аккаунт");
         ClickableSpan clickableSpan1 = new ClickableSpan() {
             @Override
@@ -163,8 +156,9 @@ public class RegistrationFragment extends Fragment implements RegistrationView{
         textView.setText(s1);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
+
     @Override
-    public void onRegistrationSuccessResponse(String login,String email,View view) {
+    public void onRegistrationSuccessResponse(String login, String email, View view) {
         Bundle bundle = new Bundle();
         bundle.putString("Auth", login);
         bundle.putString("Email", email);

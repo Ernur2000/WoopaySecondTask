@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.Registration;
+package com.bolatovyernur.woopaysecondtask.registration.registration;
 
 import android.util.Log;
 import android.view.View;
@@ -6,8 +6,6 @@ import android.widget.Toast;
 import com.bolatovyernur.woopaysecondtask.api.AbstractPresenter;
 import com.bolatovyernur.woopaysecondtask.api.ResponseCallback;
 import com.bolatovyernur.woopaysecondtask.api.ResponseHandler;
-import com.bolatovyernur.woopaysecondtask.model.AuthRequest;
-import com.bolatovyernur.woopaysecondtask.model.AuthResponse;
 import com.bolatovyernur.woopaysecondtask.model.ErrorResponses;
 import com.bolatovyernur.woopaysecondtask.model.RegisterRequest;
 import java.util.List;

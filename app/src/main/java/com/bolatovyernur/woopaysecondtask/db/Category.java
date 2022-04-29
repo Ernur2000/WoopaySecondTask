@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "category_table")
 public class Category {
     @PrimaryKey
-    public int uid;
+    public int id;
 
     @ColumnInfo(name = "title")
     public String title;

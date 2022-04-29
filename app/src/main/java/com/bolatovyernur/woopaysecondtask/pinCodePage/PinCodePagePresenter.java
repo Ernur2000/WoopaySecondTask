@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.PinCodePage;
+package com.bolatovyernur.woopaysecondtask.pinCodePage;
 
 import android.view.View;
 import android.widget.Toast;
@@ -19,18 +19,28 @@ import java.util.List;
 
 public class PinCodePagePresenter extends AbstractPresenter {
     PinCodePageView pinCodePageView = new PinCodePageFragment();
+    String messageAfterDecrypt;
+    PreferenceUtils preferenceUtils;
 
-    public void login(String login, String password, View view) {
+    public void login(View view) {
+        preferenceUtils = new PreferenceUtils(view.getContext());
+        String login = preferenceUtils.getString(Constants.KEY_EMAIL);
+        String password = preferenceUtils.getString(Constants.KEY_PASSWORD);
+        try {
+            messageAfterDecrypt = AESCrypt.decrypt(login, password);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
         AuthRequest authRequest = new AuthRequest();
         authRequest.setLogin(login);
-        authRequest.setPassword(password);
+        authRequest.setPassword(messageAfterDecrypt);
         getApiService().login(authRequest).enqueue(new ResponseHandler<>(new ResponseCallback<AuthResponse>() {
             @Override
             public void onSuccess(AuthResponse response) {
                 String token = response.getToken();
                 try {
                     String encryptedToken = AESCrypt.encrypt(login, token);
-                    PreferenceUtils.saveString(Constants.KEY_TOKEN, encryptedToken);
+                    preferenceUtils.saveString(Constants.KEY_TOKEN, encryptedToken);
                 } catch (IllegalStateException | JsonSyntaxException | GeneralSecurityException exception) {
                     Toast.makeText(view.getContext(), "Error" + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }

@@ -12,11 +12,14 @@ import androidx.navigation.Navigation;
 
 import com.bolatovyernur.woopaysecondtask.R;
 import com.bolatovyernur.woopaysecondtask.databinding.FragmentMainPageBinding;
+import com.bolatovyernur.woopaysecondtask.pinCodePage.PinCodePageFragment;
 import com.bolatovyernur.woopaysecondtask.util.Constants;
 import com.bolatovyernur.woopaysecondtask.util.PreferenceUtils;
 
 public class MainPageFragment extends Fragment {
     FragmentMainPageBinding binding;
+    Bundle bundle;
+    PinCodePageFragment fragment;
     PreferenceUtils preferenceUtils;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -31,12 +34,22 @@ public class MainPageFragment extends Fragment {
         preferenceUtils = new PreferenceUtils(getContext());
         MainPagePresenter mainPagePresenter = new MainPagePresenter();
         mainPagePresenter.getCategories(view);
-        String login = PreferenceUtils.getString(Constants.KEY_EMAIL);
-        String password = PreferenceUtils.getString(Constants.KEY_PASSWORD);
+        fragment = new PinCodePageFragment();
+
+        String login = preferenceUtils.getString(Constants.KEY_EMAIL);
+        String password = preferenceUtils.getString(Constants.KEY_PASSWORD);
+        String pin = preferenceUtils.getString("passCode");
+        bundle = new Bundle();
+
         if (login != null && password != null) {
-            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_pinCodePageFragment);
+            if (pin != null) {
+                bundle.putString("flag", "enter");
+            } else {
+                bundle.putString("flag", "create");
+            }
+            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_pinCodePageFragment, bundle);
         } else {
-            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_registrationFragment);
+            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_loginFragment);
         }
     }
 }

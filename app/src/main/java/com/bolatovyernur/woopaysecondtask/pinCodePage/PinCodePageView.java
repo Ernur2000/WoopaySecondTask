@@ -1,4 +1,4 @@
-package com.bolatovyernur.woopaysecondtask.registration.PinCodePage;
+package com.bolatovyernur.woopaysecondtask.pinCodePage;
 
 import android.view.View;
 

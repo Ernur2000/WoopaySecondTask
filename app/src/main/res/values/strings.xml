@@ -36,4 +36,5 @@
     <string name="service_name">Сервис</string>
     <string name="platform">Платформа</string>
     <string name="forgotPass">Забыл Пин</string>
+    <string name="category_detail_information">Category detail information</string>
 </resources>

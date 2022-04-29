@@ -1,9 +1,9 @@
 package com.bolatovyernur.woopaysecondtask.api;
 
+import com.bolatovyernur.woopaysecondtask.db.Category;
 import com.bolatovyernur.woopaysecondtask.model.TopServiceResponse;
 import com.bolatovyernur.woopaysecondtask.model.AuthRequest;
 import com.bolatovyernur.woopaysecondtask.model.AuthResponse;
-import com.bolatovyernur.woopaysecondtask.model.CategoryResponse;
 import com.bolatovyernur.woopaysecondtask.model.ErrorResponses;
 import com.bolatovyernur.woopaysecondtask.model.PasswordRequest;
 import com.bolatovyernur.woopaysecondtask.model.RegisterRequest;
@@ -32,7 +32,7 @@ public interface ApiService {
     Call<List<ErrorResponses>> createPassword(@Body PasswordRequest passwordRequest);
 
     @GET("service-category")
-    Call<List<CategoryResponse>> getCategory();
+    Call<List<Category>> getCategory();
 
     @GET("service-top")
     Call<List<TopServiceResponse>> getTopService(@Header("Authorization") String token,@Query("expand") String expand,@Query("platform") String platform);
